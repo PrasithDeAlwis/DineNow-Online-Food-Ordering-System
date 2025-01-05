@@ -22,6 +22,7 @@
                     <a href="index.jsp" class="text-gray-900 hover:text-yellow-400">Home</a>
                     <a href="BrowseMenu.jsp" class="text-gray-600 hover:text-yellow-400">Browse Menu</a>
                     <a href="Restaurants.jsp" class="text-gray-600 hover:text-yellow-400">Restaurants</a>
+                    <a href="Cart.jsp" class="text-gray-600 hover:text-yellow-400">Cart</a>
                     <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
                         Login/Signup
                     </a>
