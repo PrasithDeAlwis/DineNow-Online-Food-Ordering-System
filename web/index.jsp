@@ -163,12 +163,6 @@
                 <p class="text-gray-600 mt-2">Get your food delivered fresh and hot to your door.</p>
             </div>
         </div>
-            <div class="text-center">
-                <div class="bg-yellow-100 w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-motorcycle text-yellow-400 text-2xl"></i>
-                </div>
-            </div>
-        </div>
     </section>
 
     <!-- Footer -->
