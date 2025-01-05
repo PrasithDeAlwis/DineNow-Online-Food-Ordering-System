@@ -18,13 +18,19 @@
                         <span class="text-yellow-400 text-2xl font-bold">Dine NOW</span>
                     </a>
                 </div>
-                <div class="flex items-center space-x-8">
+                <div class="hidden md:flex items-center space-x-8">
                     <a href="index.jsp" class="text-gray-900 hover:text-yellow-400">Home</a>
                     <a href="BrowseMenu.jsp" class="text-gray-600 hover:text-yellow-400">Browse Menu</a>
                     <a href="Restaurants.jsp" class="text-gray-600 hover:text-yellow-400">Restaurants</a>
                     <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
                         Login/Signup
                     </a>
+                </div>
+                <!-- Mobile Menu -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-500 focus:outline-none focus:text-gray-900">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -33,12 +39,12 @@
     <!-- Hero Section -->
     <div class="pt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="flex items-center">
-                <div class="w-1/2">
-                    <h1 class="text-4xl font-bold text-gray-900">Quick Bites,</h1>
-                    <h2 class="text-4xl font-bold text-yellow-400 mt-2">Right to Your Door! 🚀🍔</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="w-full md:w-1/2 mb-6 md:mb-0">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Quick Bites,</h1>
+                    <h2 class="text-3xl md:text-4xl font-bold text-yellow-400 mt-2">Right to Your Door! 🚀🍔</h2>
                     <div class="mt-8">
-                        <div class="flex space-x-4">
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                             <div class="flex-grow">
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -54,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-1/2">
+                <div class="w-full md:w-1/2">
                     <img src="assets/hero-image.jpg" alt="Food delivery" class="w-full rounded-lg">
                 </div>
             </div>
@@ -64,7 +70,7 @@
     <!-- Popular Categories -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 class="text-2xl font-bold text-gray-900 mb-8">Popular Categories</h2>
-        <div class="grid grid-cols-6 gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="assets/categories/burger.jpg" alt="Burgers" class="w-full h-32 object-cover rounded-lg">
@@ -108,7 +114,7 @@
     <section class="bg-gray-100 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-8">Popular Restaurants</h2>
-            <div class="grid grid-cols-6 gap-6">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
                     <img src="assets/restaurants/mcdonalds.png" alt="McDonald's" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">McDonald's London</p>
@@ -139,28 +145,28 @@
 
     <!-- How It Works -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">How It Works</h2>
-        <div class="grid grid-cols-3 gap-8">
-            <div class="text-center">
-                <div class="bg-yellow-100 w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-map-marker-alt text-yellow-400 text-2xl"></i>
-                </div>
-                <h3 class="font-semibold mb-2">Set Your Location</h3>
-                <p class="text-gray-600">Choose your delivery location</p>
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">How DineNow Works</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="text-center p-6 bg-white rounded-xl shadow-sm">
+                <i class="fas fa-search text-yellow-400 text-4xl mb-4"></i>
+                <h3 class="text-lg font-bold">Browse Menus</h3>
+                <p class="text-gray-600 mt-2">Explore your favorite meals from top restaurants.</p>
             </div>
-            <div class="text-center">
-                <div class="bg-yellow-100 w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-utensils text-yellow-400 text-2xl"></i>
-                </div>
-                <h3 class="font-semibold mb-2">Choose Your Meal</h3>
-                <p class="text-gray-600">Browse restaurants and select your food</p>
+            <div class="text-center p-6 bg-white rounded-xl shadow-sm">
+                <i class="fas fa-utensils text-yellow-400 text-4xl mb-4"></i>
+                <h3 class="text-lg font-bold">Choose Dishes</h3>
+                <p class="text-gray-600 mt-2">Pick your favorite meals and order them online.</p>
             </div>
+            <div class="text-center p-6 bg-white rounded-xl shadow-sm">
+                <i class="fas fa-truck text-yellow-400 text-4xl mb-4"></i>
+                <h3 class="text-lg font-bold">Fast Delivery</h3>
+                <p class="text-gray-600 mt-2">Get your food delivered fresh and hot to your door.</p>
+            </div>
+        </div>
             <div class="text-center">
                 <div class="bg-yellow-100 w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4">
                     <i class="fas fa-motorcycle text-yellow-400 text-2xl"></i>
                 </div>
-                <h3 class="font-semibold mb-2">Fast Delivery</h3>
-                <p class="text-gray-600">Food is prepared & delivered to you</p>
             </div>
         </div>
     </section>
