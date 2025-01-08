@@ -84,7 +84,7 @@ if (request.getMethod().equals("POST")) {
                     <div class="flex flex-wrap lg:flex-col gap-2 sm:gap-4">
                         <% 
                             String[] categories = {"Burgers", "Fries", "Snacks", "Salads", "Cold drinks", 
-                                                    "Happy Meal", "Desserts", "Hot drinks", "Sauces"}; 
+                                                    "Pizzas", "Desserts", "Hot drinks", "Sauces"}; 
                             String activeCategory = request.getParameter("category") == null ? "burgers" : request.getParameter("category");
                         %>
                         <% for(String category : categories) { 
@@ -109,27 +109,49 @@ if (request.getMethod().equals("POST")) {
                     <%
                         Map<String, String[][]> menuItemsMap = new HashMap<>();
                         menuItemsMap.put("burgers", new String[][]{
-                            {"Royal Cheese Burger with extra Fries", "1350", "images/burger-image.jpg", "A delicious burger with extra crispy fries."},
-                            {"Big Mac Combo", "1500", "images/burger-image.jpg", "A classic Big Mac with fries and a drink."},
-                            {"Big Mac Combo", "1500", "images/burger-image.jpg", "Big Mac with extra cheese and fries."},
-                            {"Cheese Burger", "1200", "images/burger-image.jpg", "A classic cheese burger with your choice of toppings."},
-                            {"Chicken Royale", "1450", "images/burger-image.jpg", "A spicy chicken royale with extra mayo and fries."},
-                            {"Veggie Burger", "1000", "images/burger-image.jpg", "A fresh veggie patty with lettuce, tomato, and sauce."}
+                            {"Classic Beef Burger with Cheese", "900", "images/Burger1.png", "Juicy beef, cheddar, lettuce, tomatoes, and special sauce in a sesame bun"},
+                            {"Grilled Chicken Burger", "1200", "images/Burger2.png", "Grilled chicken, lettuce, tomato, and garlic mayo in a golden bun"},
+                            {"Spicy Veggie Burger", "850", "images/Burger3.png", "Crispy veggie patty, lettuce, tomatoes, and zesty sauce a vegetarian delight"},
+                            {"ouble Patty Cheese Burger", "1350", "images/Burger4.png", "Double beef, cheddar, onions, and BBQ sauce in a toasted bun"},
+                            {"Cheese Burger", "1100", "images/Burger5.png", "A cheeseburger is a hamburger with melted cheese and toppings"}
                         });
                         menuItemsMap.put("fries", new String[][]{
-                            {"Double Fries", "800", "fries-image.jpg", "Double the fries, double the fun!"},
-                            {"Fries Combo", "600", "fries-image.jpg", "Crispy fries served with your choice of dipping sauce."},
-                            {"Cheese Fries", "900", "fries-image.jpg", "Fries topped with melted cheese and savory seasonings."},
-                            {"Spicy Fries", "700", "fries-image.jpg", "Hot and spicy fries with a zesty flavor."},
-                            {"Garlic Fries", "750", "fries-image.jpg", "Crispy fries with a garlic butter seasoning."}
+                            {"Classic French Fries", "500", "images/Fries1.png", "Enjoy the golden crunch of our perfectly salted fries"},
+                            {"Cheese Loaded Fries", "700", "images/Fries2.jpg", "Indulge in hot, crispy fries topped with melted cheddar and aromatic herbs"},
+                            {"Spicy Curly Fries", "600", "images/Fries3.jpg", "Spice up your snack with seasoned curly fries and tangy dipping sauce"}
+                        });
+                        menuItemsMap.put("snacks", new String[][]{
+                            {"Chicken Nuggets", "650", "images/Snacks1.jpg", "Crispy chicken nuggets with BBQ or honey mustard sauce"},
+                            {"Mozzarella Sticks", "700", "images/Snacks2.jpg", "Gooey mozzarella sticks with a crunchy crust, served with marinara sauce"},
+                            {"Onion Rings", "500", "images/Snacks3.jpg", "Crispy, spiced onion rings fried to golden perfection"}
                         });
                         menuItemsMap.put("salads", new String[][]{
-                            {"Caesar Salad", "900", "salad-image.jpg", "A classic Caesar salad with creamy dressing."},
-                            {"Greek Salad", "850", "salad-image.jpg", "A fresh Greek salad with olives, feta, and tomatoes."},
-                            {"Chicken Caesar Salad", "1050", "salad-image.jpg", "Caesar salad with grilled chicken and crunchy croutons."},
-                            {"Mixed Salad", "800", "salad-image.jpg", "A healthy mix of fresh vegetables with a light vinaigrette."},
-                            {"Fruit Salad", "650", "salad-image.jpg", "A refreshing mix of seasonal fruits."},
-                            {"Avocado Salad", "950", "salad-image.jpg", "A creamy avocado salad with a tangy dressing."}
+                            {"Caesar Salad", "800", "images/Salad1.png", "A classic Caesar salad with creamy dressing."},
+                            {"Greek Salad", "850", "images/Salad2.png", "A fresh Greek salad with olives, feta, and tomatoes."},
+                            {"Grilled Chicken Salad", "900", "images/Salad3.jpg", "Caesar salad with grilled chicken and crunchy croutons."}
+                        });
+                        menuItemsMap.put("colddrinks", new String[][]{
+                            {"Iced Lemon Tea", "400", "images/Drinks1.png", "Refreshing iced tea with a splash of lemon, balancing sweetness and tang"},
+                            {"Chilled Mango Juice", "300", "images/Drinks2.png", "Enjoy the sweet, creamy mango juice, served ice-cold for a refreshing treat"}
+                        });
+                        menuItemsMap.put("pizzas", new String[][]{
+                            {"Neapolitan Pizza", "2000", "images/Pizza1.png", "Neapolitan pizza has a thin crust with fresh toppings, cooked in a wood-fired oven"},
+                            {"Pizza Margherita", "1500", "images/Pizza2.png", "Pizza Margherita combines pasta, tomato sauce, mozzarella, and basil, topped with olive oil"}
+                        }); 
+                        menuItemsMap.put("desserts", new String[][]{
+                            {"Chocolate Brownie", "400", "images/Desserts1.png", "A warm, gooey chocolate brownie that melts in your mouth"},
+                            {"Apple Pie", "900", "images/Desserts2.png", "A warm, flaky crust filled with sweet, spiced cinnamon apples"},
+                            {"Strawberry Cheesecake", "900", "images/Desserts3.jpg", "Creamy cheesecake with a buttery crust, topped with tangy strawberry compote"}
+                        });
+                        menuItemsMap.put("hotdrinks", new String[][]{
+                            {"Espresso", "200", "images/HotDrink1.png", "A rich, aromatic shot of espresso brewed to perfection for an energy boost"},
+                            {"Cappuccino", "350", "images/HotDrink2.png", "Steamed milk over espresso, topped with a dusting of cocoa powder"},
+                            {"Green Tea", "200", "images/HotDrink3.png", "A soothing green tea with a hint of honey for natural sweetness"}
+                        });
+                        menuItemsMap.put("sauces", new String[][]{
+                            {"Garlic Mayo", "200", "images/Sauces1.png", "Creamy garlic mayo that adds a flavorful burst to your meal"},
+                            {"Spicy Salsa", "200", "images/Sauces2.png", "Zesty tomato salsa with a touch of heat for spice lovers"},
+                            {"Honey Mustard", "150", "images/Sauces3.png", "A sweet honey and tangy mustard blend, perfect for dipping or drizzling"}
                         });
 
                         String[][] selectedCategoryItems = menuItemsMap.get(activeCategory);
@@ -145,7 +167,7 @@ if (request.getMethod().equals("POST")) {
                                 <p class="text-base sm:text-lg font-semibold">Rs : <%= item[1] %></p>
                             </div>
                             <div class="relative ml-0 sm:ml-4 flex-shrink-0">
-                                <img src="<%= item[2] %>" alt="Menu Item" class="w-full h-32 sm:h-32 md:h-36 object-cover sm:w-28 md:w-32"/>
+                                <img src="<%= item[2] %>" alt="Menu Item" class="w-full h-32 sm:h-32 md:h-32 object-cover sm:w-28 md:w-32"/>
                                 <div class="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-white bg-opacity-90 rounded-tl-[2rem] rounded-tr-none rounded-bl-none rounded-br-lg p-4 sm:p-6">
                                     <form action="BrowseMenu.jsp" method="POST" class="inline">
                                         <input type="hidden" name="itemName" value="<%= item[0] %>">

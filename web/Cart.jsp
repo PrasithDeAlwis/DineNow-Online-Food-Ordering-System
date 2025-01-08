@@ -176,7 +176,8 @@ if (request.getMethod().equals("POST")) {
                                     <p class="text-center text-gray-500 text-sm sm:text-base">Rs 0</p>
                                 <% } %>
                                 <div class="mt-3 sm:mt-4 flex justify-center">
-                                <form action="checkout" method="POST">
+                                <form action="Checkout.jsp" method="POST">
+                                    <input type="hidden" name="totalPrice" value="<%= total %>">
                                     <button type="submit" 
                                         class="w-auto max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-yellow-400 hover:bg-yellow-500 text-black text-sm sm:text-base font-semibold py-2 sm:py-3 px-8 sm:px-12 rounded-full transition-colors">
                                         Checkout
