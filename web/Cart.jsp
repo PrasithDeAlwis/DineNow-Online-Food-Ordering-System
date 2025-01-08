@@ -29,20 +29,45 @@ if (request.getMethod().equals("POST")) {
     <nav class="bg-white shadow-sm fixed w-full z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="index.jsp" class="flex-shrink-0">
-                        <span class="text-yellow-400 text-2xl font-bold">Dine NOW</span>
-                    </a>
-                </div>
+                <!-- Left side: Logo and Links -->
                 <div class="flex items-center space-x-8">
-                    <a href="index.jsp" class="text-gray-600 hover:text-yellow-400">Home</a>
-                    <a href="BrowseMenu.jsp" class="text-gray-600 hover:text-yellow-400">Browse Menu</a>
-                    <a href="Restaurants.jsp" class="text-gray-600 hover:text-yellow-400">Restaurants</a>
-                    <a href="Cart.jsp" class="text-gray-900 hover:text-yellow-400">Cart</a>
+                    <a href="index.jsp" class="flex-shrink-0">
+                        <img src="resources/images/logo.png" alt="Dine NOW Logo" class="h-20 w-auto mr-0 mt-6">
+                    </a>
+                    <div class="hidden lg:flex space-x-8">
+                        <a href="index.jsp" class="text-gray-600 hover:text-yellow-400">Home</a>
+                        <a href="BrowseMenu.jsp" class="text-gray-600 hover:text-yellow-400">Browse Menu</a>
+                        <a href="Cart.jsp" class="text-gray-900 hover:text-yellow-400">Cart</a>
+                    </div>
+                </div>
+
+                <!-- Right side: Login and Signup Buttons -->
+                <div class="hidden lg:flex items-center space-x-4">
+
                     <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
-                        Login/Signup
+                        Login
+                    </a>
+                    <a href="SignUp.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                        Signup
                     </a>
                 </div>
+                <!-- Mobile responsive menu toggle -->
+                <div class="flex items-center lg:hidden">
+                    <button class="text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400" id="menu-toggle">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="lg:hidden" id="mobile-menu" style="display: none;">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Home</a>
+                <a href="BrowseMenu.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Browse Menu</a>
+                <a href="Cart.jsp" class="block text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Cart</a>
+                <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
+                <a href="SignUp.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Signup</a>
             </div>
         </div>
     </nav>

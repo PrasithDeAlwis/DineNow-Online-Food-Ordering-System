@@ -13,7 +13,9 @@
         <div class="p-8 relative">
             <!-- Header -->
             <div class="flex items-center justify-between mb-8">
-                <h1 class="text-2xl font-bold text-yellow-400">Dine NOW</h1>
+                <a href="index.jsp" class="flex-shrink-0">
+                    <img src="resources/images/logo.png" alt="Dine NOW Logo" class="h-20 w-auto">
+                </a>
             </div>
 
             <div class="flex relative w-full h-screen bg-white">

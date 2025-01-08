@@ -16,7 +16,7 @@
                 <!-- Left side: Logo and Links -->
                 <div class="flex items-center space-x-8">
                     <a href="index.jsp" class="flex-shrink-0">
-                        <img src="Images/logo.png" alt="Dine NOW Logo" class="h-20 w-auto mr-0 mt-6">
+                        <img src="resources/images/logo.png" alt="Dine NOW Logo" class="h-20 w-auto mr-0 mt-6">
                     </a>
                     <div class="hidden lg:flex space-x-8">
                         <a href="index.jsp" class="text-gray-900 hover:text-yellow-400">Home</a>
@@ -58,7 +58,7 @@
 
     <!-- Hero Section -->
     <div class="pt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-[url('resources/images/home_Copy.png')] bg-cover bg-center bg-no-repeat rounded-lg">
             <div class="flex flex-col lg:flex-row items-center">
                 <div class="lg:w-1/2">
                     <h1 class="text-4xl font-bold text-gray-900">Quick Bites,</h1>
@@ -80,9 +80,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="lg:w-1/2 mt-8 lg:mt-0">
-                    <img src="Images/home.png" alt="Food delivery" class="w-full rounded-lg">
-                </div>
+
             </div>
         </div>
     </div>
@@ -93,37 +91,37 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                    <img src="Images/Burgers & Fast food.png" alt="Burgers" class="w-full h-32 object-cover rounded-lg">
+                    <img src="resources/images/Burgers & Fast food.png" alt="Burgers" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Burgers & Fast food</p>
                 </div>
             </div>
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                    <img src="Images/Salads.png" alt="Salads" class="w-full h-32 object-cover rounded-lg">
+                    <img src="resources/images/Salads.png" alt="Salads" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Salads</p>
                 </div>
             </div>
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                    <img src="Images/Pasta & Casuals.png" alt="Pasta" class="w-full h-32 object-cover rounded-lg">
+                    <img src="resources/images/Pasta & Casuals.png" alt="Pasta" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Pasta</p>
                 </div>
             </div>
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                    <img src="Images/Pizza.png" alt="Pizza" class="w-full h-32 object-cover rounded-lg">
+                    <img src="resources/images/Pizza.png" alt="Pizza" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Pizza</p>
                 </div>
             </div>
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                    <img src="Images/Breakfast.png" alt="Breakfast" class="w-full h-32 object-cover rounded-lg">
+                    <img src="resources/images/Breakfast.png" alt="Breakfast" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Breakfast</p>
                 </div>
             </div>
             <div class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                    <img src="Images/Soups.png" alt="Soups" class="w-full h-32 object-cover rounded-lg">
+                    <img src="resources/images/Soups.png" alt="Soups" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Soups</p>
                 </div>
             </div>
@@ -136,27 +134,27 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-8">Popular Restaurants</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                    <img src="Images/McDonald.png" alt="McDonald's" class="w-full h-24 object-contain">
+                    <img src="resources/images/McDonald.png" alt="McDonald's" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">McDonald's</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                    <img src="Images/PizzaHut.png" alt="Pizza Hut" class="w-full h-24 object-contain">
+                    <img src="resources/images/PizzaHut.png" alt="Pizza Hut" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">Pizza Hut</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                    <img src="Images/KFC.png" alt="KFC" class="w-full h-24 object-contain">
+                    <img src="resources/images/KFC.png" alt="KFC" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">KFC</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                    <img src="Images/Crepe runner.png" alt="Crepe runner" class="w-full h-24 object-contain">
+                    <img src="resources/images/Crepe runner.png" alt="Crepe runner" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">Crepe Runner</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                    <img src="Images/Burger King.png" alt="Burger King" class="w-full h-24 object-contain">
+                    <img src="resources/images/Burger King.png" alt="Burger King" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">Burger King</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                    <img src="Images/Domino's.png" alt="Domino's Pizza" class="w-full h-24 object-contain">
+                    <img src="resources/images/Domino's.png" alt="Domino's Pizza" class="w-full h-24 object-contain">
                     <p class="mt-4 text-center font-medium">Domino's Pizza</p>
                 </div>
             </div>
@@ -196,8 +194,8 @@
                     </p>
 
                     <div class="mt-4 flex space-x-4 items-center">
-                        <img src="Images/AppStore.png" alt="App Store" class="h-8 w-auto">
-                        <img src="Images/Playstore.png" alt="Play Store" class="h-8 w-auto">
+                        <img src="resources/images/AppStore.png" alt="App Store" class="h-8 w-auto">
+                        <img src="resources/images/Playstore.png" alt="Play Store" class="h-8 w-auto">
                     </div>
 
                 </div>

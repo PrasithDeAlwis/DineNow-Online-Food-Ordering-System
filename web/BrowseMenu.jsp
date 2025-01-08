@@ -38,20 +38,45 @@ if (request.getMethod().equals("POST")) {
     <nav class="bg-white shadow-sm fixed w-full z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="index.jsp" class="flex-shrink-0">
-                        <span class="text-yellow-400 text-2xl font-bold">Dine NOW</span>
-                    </a>
-                </div>
+                <!-- Left side: Logo and Links -->
                 <div class="flex items-center space-x-8">
-                    <a href="index.jsp" class="text-gray-600 hover:text-yellow-400">Home</a>
-                    <a href="BrowseMenu.jsp" class="text-gray-900 hover:text-yellow-400">Browse Menu</a>
-                    <a href="Restaurants.jsp" class="text-gray-600 hover:text-yellow-400">Restaurants</a>
-                    <a href="Cart.jsp" class="text-gray-600 hover:text-yellow-400">Cart</a>
+                    <a href="index.jsp" class="flex-shrink-0">
+                        <img src="resources/images/logo.png" alt="Dine NOW Logo" class="h-20 w-auto mr-0 mt-6">
+                    </a>
+                    <div class="hidden lg:flex space-x-8">
+                        <a href="index.jsp" class="text-gray-600 hover:text-yellow-400">Home</a>
+                        <a href="BrowseMenu.jsp" class="text-gray-900 hover:text-yellow-400">Browse Menu</a>
+                        <a href="Cart.jsp" class="text-gray-600 hover:text-yellow-400">Cart</a>
+                    </div>
+                </div>
+
+                <!-- Right side: Login and Signup Buttons -->
+                <div class="hidden lg:flex items-center space-x-4">
+
                     <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
-                        Login/Signup
+                        Login
+                    </a>
+                    <a href="SignUp.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                        Signup
                     </a>
                 </div>
+                <!-- Mobile responsive menu toggle -->
+                <div class="flex items-center lg:hidden">
+                    <button class="text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400" id="menu-toggle">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="lg:hidden" id="mobile-menu" style="display: none;">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Home</a>
+                <a href="BrowseMenu.jsp" class="block text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Browse Menu</a>
+                <a href="Cart.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Cart</a>
+                <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
+                <a href="SignUp.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Signup</a>
             </div>
         </div>
     </nav>
@@ -109,49 +134,49 @@ if (request.getMethod().equals("POST")) {
                     <%
                         Map<String, String[][]> menuItemsMap = new HashMap<>();
                         menuItemsMap.put("burgers", new String[][]{
-                            {"Classic Beef Burger with Cheese", "900", "images/Burger1.png", "Juicy beef, cheddar, lettuce, tomatoes, and special sauce in a sesame bun"},
-                            {"Grilled Chicken Burger", "1200", "images/Burger2.png", "Grilled chicken, lettuce, tomato, and garlic mayo in a golden bun"},
-                            {"Spicy Veggie Burger", "850", "images/Burger3.png", "Crispy veggie patty, lettuce, tomatoes, and zesty sauce a vegetarian delight"},
-                            {"ouble Patty Cheese Burger", "1350", "images/Burger4.png", "Double beef, cheddar, onions, and BBQ sauce in a toasted bun"},
-                            {"Cheese Burger", "1100", "images/Burger5.png", "A cheeseburger is a hamburger with melted cheese and toppings"}
+                            {"Classic Beef Burger with Cheese", "900", "resources/images/Burger1.png", "Juicy beef, cheddar, lettuce, tomatoes, and special sauce in a sesame bun"},
+                            {"Grilled Chicken Burger", "1200", "resources/images/Burger2.png", "Grilled chicken, lettuce, tomato, and garlic mayo in a golden bun"},
+                            {"Spicy Veggie Burger", "850", "resources/images/Burger3.png", "Crispy veggie patty, lettuce, tomatoes, and zesty sauce a vegetarian delight"},
+                            {"ouble Patty Cheese Burger", "1350", "resources/images/Burger4.png", "Double beef, cheddar, onions, and BBQ sauce in a toasted bun"},
+                            {"Cheese Burger", "1100", "resources/images/Burger5.png", "A cheeseburger is a hamburger with melted cheese and toppings"}
                         });
                         menuItemsMap.put("fries", new String[][]{
-                            {"Classic French Fries", "500", "images/Fries1.png", "Enjoy the golden crunch of our perfectly salted fries"},
-                            {"Cheese Loaded Fries", "700", "images/Fries2.jpg", "Indulge in hot, crispy fries topped with melted cheddar and aromatic herbs"},
-                            {"Spicy Curly Fries", "600", "images/Fries3.jpg", "Spice up your snack with seasoned curly fries and tangy dipping sauce"}
+                            {"Classic French Fries", "500", "resources/images/Fries1.png", "Enjoy the golden crunch of our perfectly salted fries"},
+                            {"Cheese Loaded Fries", "700", "resources/images/Fries2.jpg", "Indulge in hot, crispy fries topped with melted cheddar and aromatic herbs"},
+                            {"Spicy Curly Fries", "600", "resources/images/Fries3.jpg", "Spice up your snack with seasoned curly fries and tangy dipping sauce"}
                         });
                         menuItemsMap.put("snacks", new String[][]{
-                            {"Chicken Nuggets", "650", "images/Snacks1.jpg", "Crispy chicken nuggets with BBQ or honey mustard sauce"},
-                            {"Mozzarella Sticks", "700", "images/Snacks2.jpg", "Gooey mozzarella sticks with a crunchy crust, served with marinara sauce"},
-                            {"Onion Rings", "500", "images/Snacks3.jpg", "Crispy, spiced onion rings fried to golden perfection"}
+                            {"Chicken Nuggets", "650", "resources/images/Snacks1.jpg", "Crispy chicken nuggets with BBQ or honey mustard sauce"},
+                            {"Mozzarella Sticks", "700", "resources/images/Snacks2.jpg", "Gooey mozzarella sticks with a crunchy crust, served with marinara sauce"},
+                            {"Onion Rings", "500", "resources/images/Snacks3.jpg", "Crispy, spiced onion rings fried to golden perfection"}
                         });
                         menuItemsMap.put("salads", new String[][]{
-                            {"Caesar Salad", "800", "images/Salad1.png", "A classic Caesar salad with creamy dressing."},
-                            {"Greek Salad", "850", "images/Salad2.png", "A fresh Greek salad with olives, feta, and tomatoes."},
-                            {"Grilled Chicken Salad", "900", "images/Salad3.jpg", "Caesar salad with grilled chicken and crunchy croutons."}
+                            {"Caesar Salad", "800", "resources/images/Salad1.png", "A classic Caesar salad with creamy dressing."},
+                            {"Greek Salad", "850", "resources/images/Salad2.png", "A fresh Greek salad with olives, feta, and tomatoes."},
+                            {"Grilled Chicken Salad", "900", "resources/images/Salad3.jpg", "Caesar salad with grilled chicken and crunchy croutons."}
                         });
                         menuItemsMap.put("colddrinks", new String[][]{
-                            {"Iced Lemon Tea", "400", "images/Drinks1.png", "Refreshing iced tea with a splash of lemon, balancing sweetness and tang"},
-                            {"Chilled Mango Juice", "300", "images/Drinks2.png", "Enjoy the sweet, creamy mango juice, served ice-cold for a refreshing treat"}
+                            {"Iced Lemon Tea", "400", "resources/images/Drinks1.png", "Refreshing iced tea with a splash of lemon, balancing sweetness and tang"},
+                            {"Chilled Mango Juice", "300", "resources/images/Drinks2.png", "Enjoy the sweet, creamy mango juice, served ice-cold for a refreshing treat"}
                         });
                         menuItemsMap.put("pizzas", new String[][]{
-                            {"Neapolitan Pizza", "2000", "images/Pizza1.png", "Neapolitan pizza has a thin crust with fresh toppings, cooked in a wood-fired oven"},
-                            {"Pizza Margherita", "1500", "images/Pizza2.png", "Pizza Margherita combines pasta, tomato sauce, mozzarella, and basil, topped with olive oil"}
+                            {"Neapolitan Pizza", "2000", "resources/images/Pizza1.png", "Neapolitan pizza has a thin crust with fresh toppings, cooked in a wood-fired oven"},
+                            {"Pizza Margherita", "1500", "resources/images/Pizza2.png", "Pizza Margherita combines pasta, tomato sauce, mozzarella, and basil, topped with olive oil"}
                         }); 
                         menuItemsMap.put("desserts", new String[][]{
-                            {"Chocolate Brownie", "400", "images/Desserts1.png", "A warm, gooey chocolate brownie that melts in your mouth"},
-                            {"Apple Pie", "900", "images/Desserts2.png", "A warm, flaky crust filled with sweet, spiced cinnamon apples"},
-                            {"Strawberry Cheesecake", "900", "images/Desserts3.jpg", "Creamy cheesecake with a buttery crust, topped with tangy strawberry compote"}
+                            {"Chocolate Brownie", "400", "resources/images/Desserts1.png", "A warm, gooey chocolate brownie that melts in your mouth"},
+                            {"Apple Pie", "900", "resources/images/Desserts2.png", "A warm, flaky crust filled with sweet, spiced cinnamon apples"},
+                            {"Strawberry Cheesecake", "900", "resources/images/Desserts3.jpg", "Creamy cheesecake with a buttery crust, topped with tangy strawberry compote"}
                         });
                         menuItemsMap.put("hotdrinks", new String[][]{
-                            {"Espresso", "200", "images/HotDrink1.png", "A rich, aromatic shot of espresso brewed to perfection for an energy boost"},
-                            {"Cappuccino", "350", "images/HotDrink2.png", "Steamed milk over espresso, topped with a dusting of cocoa powder"},
-                            {"Green Tea", "200", "images/HotDrink3.png", "A soothing green tea with a hint of honey for natural sweetness"}
+                            {"Espresso", "200", "resources/images/HotDrink1.png", "A rich, aromatic shot of espresso brewed to perfection for an energy boost"},
+                            {"Cappuccino", "350", "resources/images/HotDrink2.png", "Steamed milk over espresso, topped with a dusting of cocoa powder"},
+                            {"Green Tea", "200", "resources/images/HotDrink3.png", "A soothing green tea with a hint of honey for natural sweetness"}
                         });
                         menuItemsMap.put("sauces", new String[][]{
-                            {"Garlic Mayo", "200", "images/Sauces1.png", "Creamy garlic mayo that adds a flavorful burst to your meal"},
-                            {"Spicy Salsa", "200", "images/Sauces2.png", "Zesty tomato salsa with a touch of heat for spice lovers"},
-                            {"Honey Mustard", "150", "images/Sauces3.png", "A sweet honey and tangy mustard blend, perfect for dipping or drizzling"}
+                            {"Garlic Mayo", "200", "resources/images/Sauces1.png", "Creamy garlic mayo that adds a flavorful burst to your meal"},
+                            {"Spicy Salsa", "200", "resources/images/Sauces2.png", "Zesty tomato salsa with a touch of heat for spice lovers"},
+                            {"Honey Mustard", "150", "resources/images/Sauces3.png", "A sweet honey and tangy mustard blend, perfect for dipping or drizzling"}
                         });
 
                         String[][] selectedCategoryItems = menuItemsMap.get(activeCategory);
