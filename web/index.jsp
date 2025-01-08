@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm fixed w-full z-10">
+    <nav class="bg-white shadow-sm fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <!-- Left side: Logo and Links -->
@@ -58,8 +58,8 @@
 
     <!-- Hero Section -->
     <div class="pt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-[url('resources/images/home_Copy.png')] bg-cover bg-center bg-no-repeat rounded-lg">
-            <div class="flex flex-col lg:flex-row items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-[url('resources/images/home.png')] bg-cover bg-center bg-no-repeat rounded-lg relative before:absolute before:inset-0 before:bg-white before:opacity-50">
+            <div class="flex flex-col lg:flex-row items-center relative z-10">
                 <div class="lg:w-1/2">
                     <h1 class="text-4xl font-bold text-gray-900">Quick Bites,</h1>
                     <h2 class="text-4xl font-bold text-yellow-400 mt-2">Right to Your Door! 🚀🍔</h2>
@@ -80,7 +80,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
