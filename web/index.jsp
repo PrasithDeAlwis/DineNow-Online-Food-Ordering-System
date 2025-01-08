@@ -24,8 +24,10 @@
                         <a href="Cart.jsp" class="text-gray-600 hover:text-yellow-400">Cart</a>
                     </div>
                 </div>
+
                 <!-- Right side: Login and Signup Buttons -->
                 <div class="hidden lg:flex items-center space-x-4">
+
                     <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
                         Login
                     </a>
