@@ -211,7 +211,7 @@
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li><a href="#" class="hover:text-yellow-400">Add your restaurant</a></li>
                         <li><a href="#" class="hover:text-yellow-400">Sign up to deliver</a></li>
-                        <li><a href="#" class="hover:text-yellow-400">Create business account</a></li>
+                        <li><a href="#" class="hover:text-yellow-400">Create admin account</a></li>
                     </ul>
                 </div>
                 <div>
