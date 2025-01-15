@@ -39,7 +39,7 @@
                                 <label class="">Name</label>
                             </div>
                             <div class="pl-8 pr-6">
-                                <input type="text" value="Prasith Alvis" readonly class="w-full p-2 font-semibold rounded-lg bg-gray-50 border focus:outline-none focus:border-yellow-400"/>
+                                <input type="text" value="Prasith De Alwis" readonly class="w-full p-2 font-semibold rounded-lg bg-gray-50 border focus:outline-none focus:border-yellow-400"/>
                             </div>
                             <div class="pl-8 flex items-center pt-4">                              
                                 <label class="">Email</label>
@@ -153,10 +153,10 @@
                                     <td>
                                         <div class="flex gap-2">
                                             <button class="bg-green-400 text-white px-4 py-1 rounded-full text-sm">
-                                                Delivery
+                                                Delivered
                                             </button>
                                             <button class="bg-red-500 text-white px-4 py-1 rounded-full text-sm">
-                                                Not delivery
+                                                Not Delivered
                                             </button>
                                         </div>
                                     </td>
