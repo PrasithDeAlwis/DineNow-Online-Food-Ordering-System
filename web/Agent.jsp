@@ -82,10 +82,10 @@
                     <!-- Action Buttons -->
                     <div class="flex gap-4">
                         <button class="flex-1 bg-delivery-green hover:bg-green-500 text-white py-2.5 px-4 rounded-lg transition-all font-medium">
-                            Delivery
+                            Delivered
                         </button>
                         <button class="flex-1 bg-cancel-red hover:bg-red-500 text-white py-2.5 px-4 rounded-lg transition-all font-medium">
-                            Not Delivery
+                            Not Delivered
                         </button>
                     </div>
                 </div>
