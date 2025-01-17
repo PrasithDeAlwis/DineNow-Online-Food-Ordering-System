@@ -66,7 +66,7 @@
                 </h2>
 
                 <!-- Sign Up Form -->
-                <form class="mt-8 space-y-6" action="SignUpServlet" method="POST">
+                <form class="mt-8 space-y-6" action="processSignUp.jsp" method="POST">
                     <div class="space-y-4">
                         <!-- First Name -->
                         <div>
