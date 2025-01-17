@@ -69,7 +69,7 @@
                     </h2>
 
                     <!-- Sign In Form -->
-                    <form class="mt-8 space-y-6" action="SignInServlet" method="POST">
+                    <form class="mt-8 space-y-6" action="processSignIn.jsp" method="POST">
                         <div class="space-y-4">
                             <!-- Phone Number Input -->
                             <div>
