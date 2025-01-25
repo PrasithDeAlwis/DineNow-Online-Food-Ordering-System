@@ -7,9 +7,10 @@ import java.sql.SQLException;
 import classes.DbConnector;
 
 public class UserManager {
-    
-    public static boolean registerUser(String firstName, String lastName, String email, String password) {
-        String sql = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
+
+    // Method to register a user
+    public static boolean registerUser(String firstName, String lastName, String email, String password, String role) {
+        String sql = "INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)";
         
         try (Connection conn = DbConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -18,19 +19,21 @@ public class UserManager {
             pstmt.setString(2, lastName);
             pstmt.setString(3, email);
             pstmt.setString(4, password); // In production, hash the password
+            pstmt.setString(5, role);
             
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+            return rowsAffected > 0; // Return true if user is successfully registered
             
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-    
-    public static boolean validateUser(String email, String password) {
-        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-        
+
+    // Method to validate user credentials
+    public static String validateUser(String email, String password) {
+        String sql = "SELECT role FROM users WHERE email = ? AND password = ?";
+
         try (Connection conn = DbConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
@@ -38,11 +41,14 @@ public class UserManager {
             pstmt.setString(2, password); // In production, verify against hashed password
             
             ResultSet rs = pstmt.executeQuery();
-            return rs.next();
+            if (rs.next()) {
+                return rs.getString("role"); // Return the user's role if credentials are valid
+            }
+            return null; // Return null if no user matches the provided credentials
             
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null; // Return null if there is a database error
         }
     }
 }
