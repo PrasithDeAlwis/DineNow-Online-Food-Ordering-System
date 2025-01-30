@@ -27,13 +27,18 @@
 
                 <!-- Right side: Login and Signup Buttons -->
                 <div class="hidden lg:flex items-center space-x-4">
-
-                    <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
-                        Login
-                    </a>
-                    <a href="SignUp.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
-                        Signup
-                    </a>
+                    <% if (session.getAttribute("user") != null) { %>
+                        <a href="Logout.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                            Logout
+                        </a>
+                    <% } else { %>
+                        <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                            Login
+                        </a>
+                        <a href="SignUp.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                            Signup
+                        </a>
+                    <% } %>
                 </div>
                 <!-- Mobile responsive menu toggle -->
                 <div class="flex items-center lg:hidden">
@@ -50,8 +55,12 @@
                 <a href="index.jsp" class="block text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Home</a>
                 <a href="BrowseMenu.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Browse Menu</a>
                 <a href="Cart.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Cart</a>
-                <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
-                <a href="SignUp.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Signup</a>
+                <% if (session.getAttribute("user") != null) { %>
+                    <a href="Logout.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Logout</a>
+                <% } else { %>
+                    <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
+                    <a href="SignUp.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Signup</a>
+                <% } %>
             </div>
         </div>
     </nav>

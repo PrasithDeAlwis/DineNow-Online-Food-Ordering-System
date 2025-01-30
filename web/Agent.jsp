@@ -1,4 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="cart.UserManager" %>
+<%
+    // Check if the user is logged in and has the role "agent"
+    String user = (String) session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+
+    if (user == null || !"agent".equals(role)) {
+        // Redirect to the login page if the user is not logged in or not an agent
+        response.sendRedirect("SignIn.jsp?error=2"); // Optional: Add an error code for unauthorized access
+        return; // Stop further execution of the page
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,9 +104,9 @@
 
                 <!-- Logout Button -->
                 <div class="flex justify-center mt-8">
-                    <button class="bg-cancel-red hover:bg-red-500 text-white px-10 py-2.5 rounded-lg transition-all font-medium">
+                    <a href="Logout.jsp" class="bg-cancel-red hover:bg-red-500 text-white px-10 py-2.5 rounded-lg transition-all font-medium">
                         Logout
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

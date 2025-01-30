@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    // Check if the user is logged in
+    String user = (String) session.getAttribute("user");
 
+    // If the user is not logged in, set a flag to show an error message
+    boolean isLoggedIn = (user != null);
+%>
 <%
     String totalPrice = "0";
     if (request.getMethod().equals("POST")) {
@@ -34,13 +40,18 @@
 
                 <!-- Right side: Login and Signup Buttons -->
                 <div class="hidden lg:flex items-center space-x-4">
-
-                    <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
-                        Login
-                    </a>
-                    <a href="SignUp.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
-                        Signup
-                    </a>
+                    <% if (session.getAttribute("user") != null) { %>
+                        <a href="Logout.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                            Logout
+                        </a>
+                    <% } else { %>
+                        <a href="SignIn.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                            Login
+                        </a>
+                        <a href="SignUp.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
+                            Signup
+                        </a>
+                    <% } %>
                 </div>
                 <!-- Mobile responsive menu toggle -->
                 <div class="flex items-center lg:hidden">
@@ -54,11 +65,15 @@
         <!-- Mobile menu -->
         <div class="lg:hidden" id="mobile-menu" style="display: none;">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="index.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Home</a>
+                <a href="index.jsp" class="block text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Home</a>
                 <a href="BrowseMenu.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Browse Menu</a>
-                <a href="Cart.jsp" class="block text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Cart</a>
-                <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
-                <a href="SignUp.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Signup</a>
+                <a href="Cart.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Cart</a>
+                <% if (session.getAttribute("user") != null) { %>
+                    <a href="Logout.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Logout</a>
+                <% } else { %>
+                    <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
+                    <a href="SignUp.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Signup</a>
+                <% } %>
             </div>
         </div>
     </nav>
@@ -79,8 +94,16 @@
                 </div>
 
                 <!-- Checkout Form -->
+                <!-- Checkout Form -->
                 <div class="bg-white rounded-3xl shadow-lg p-6 z-20">
                     <h3 class="text-3xl font-semibold mb-6">Checkout</h3>
+
+                    <% if (!isLoggedIn) { %>
+                        <!-- Error Message -->
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-6">
+                            <p>You must be logged in to proceed with the checkout.</p>
+                        </div>
+                    <% } %>
 
                     <form action="#" method="POST" class="space-y-6">
                         <!-- Order Confirmation -->
@@ -96,6 +119,7 @@
                                        value="Rs : <%= totalPrice %>" 
                                        readonly 
                                        class="w-full border-b-2 font-semibold border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
+                                       <%= !isLoggedIn ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
@@ -112,10 +136,11 @@
                                 <input type="text" 
                                        class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
                                        placeholder="Enter Delivery Address"
+                                       <%= !isLoggedIn ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
-                        
+
                         <!-- Phone Number -->
                         <div class="space-y-2">
                             <div class="flex items-center gap-2">
@@ -125,17 +150,17 @@
                                 <label class="">Phone Number</label>
                             </div>
                             <div class="pl-8 pr-6">
-                            <input type="tel" 
-                                   class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
-                                   placeholder="Enter Phone Number"
-                            />
+                                <input type="tel" 
+                                       class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
+                                       placeholder="Enter Phone Number"
+                                       <%= !isLoggedIn ? "disabled" : "" %>
+                                />
                             </div>
                         </div>
 
                         <!-- Payment Options -->
                         <div class="space-y-2 pb-4">
                             <div class="flex items-center gap-2">
-                                <!-- Larger Bookmark Icon -->
                                 <svg class="w-6 h-6 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
                                     <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
                                 </svg>
@@ -148,6 +173,7 @@
                                            value="cash" 
                                            checked 
                                            class="w-4 h-4 appearance-none border-2 border-yellow-400 rounded-full checked:bg-yellow-400 checked:border-yellow-400 focus:outline-none"
+                                           <%= !isLoggedIn ? "disabled" : "" %>
                                     />
                                     <span>Cash on Delivery</span>
                                 </label>
@@ -156,6 +182,7 @@
                                            name="payment" 
                                            value="card" 
                                            class="w-4 h-4 appearance-none border-2 border-yellow-400 rounded-full checked:bg-yellow-400 checked:border-yellow-400 focus:outline-none"
+                                           <%= !isLoggedIn ? "disabled" : "" %>
                                     />
                                     <span>Card Payment</span>
                                 </label>
@@ -165,7 +192,8 @@
                         <!-- Submit Button -->
                         <div class="flex justify-center">
                             <button type="submit" 
-                                    class="bg-yellow-400 text-gray-900 py-3 px-8 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300">
+                                    class="bg-yellow-400 text-gray-900 py-3 px-8 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300"
+                                    <%= !isLoggedIn ? "disabled" : "" %>>
                                 GIVE ME MY FOODS
                             </button>
                         </div>

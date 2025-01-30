@@ -1,4 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="cart.UserManager" %>
+<%
+    // Check if the user is logged in and has the role "agent"
+    String user = (String) session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+
+    if (user == null || !"admin".equals(role)) {
+        // Redirect to the login page if the user is not logged in or not an agent
+        response.sendRedirect("SignIn.jsp?error=2"); // Optional: Add an error code for unauthorized access
+        return; // Stop further execution of the page
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,13 +60,13 @@
                                 <input type="text" value="prasith@admin.com" readonly class="w-full p-2 font-semibold rounded-lg bg-gray-50 border focus:outline-none focus:border-yellow-400"/>
                             </div>
                         </div>
-                        <div class="pt-8 flex justify-center items-center">            
-                            <button class="px-6 p-3 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center space-x-2 transition-colors">
+                        <div class="pt-8 flex justify-center items-center">
+                            <a href="Logout.jsp" class="px-6 p-3 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center space-x-2 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                 </svg>
                                 <span>Logout</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                     
