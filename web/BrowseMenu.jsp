@@ -11,9 +11,10 @@ if (request.getMethod().equals("POST")) {
     String itemName = request.getParameter("itemName");
     String itemPrice = request.getParameter("itemPrice");
     String itemImage = request.getParameter("itemImage");
-    if (itemName != null && itemPrice != null && itemImage != null) {
-        CartManager.addItem(session, itemName, itemPrice, itemImage);
-        // Redirect to prevent form resubmission
+    String foodId = request.getParameter("foodId");
+    
+    if (itemName != null && itemPrice != null && itemImage != null && foodId != null) {
+        CartManager.addItem(session, itemName, itemPrice, itemImage, foodId);
         response.sendRedirect("BrowseMenu.jsp?category=" + request.getParameter("category"));
         return;
     }
@@ -176,6 +177,7 @@ for (Food food : allFoods) {
                                         <input type="hidden" name="itemName" value="<%= food.getName() %>">
                                         <input type="hidden" name="itemPrice" value="<%= String.format("%.2f", food.getPrice()) %>">
                                         <input type="hidden" name="itemImage" value="<%= food.getImageUrl() %>">
+                                        <input type="hidden" name="foodId" value="<%= food.getId() %>">
                                         <input type="hidden" name="category" value="<%= activeCategory %>">
                                         <button type="submit" class="bg-[#0F172A] hover:bg-[#1E293B] rounded-full p-1.5 sm:p-2 shadow-lg">
                                             <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="white" viewBox="0 0 24 24">

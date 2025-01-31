@@ -1,18 +1,24 @@
 <%@ page import="cart.UserManager" %>
+<%@ page import="java.util.Map" %>
 <%
     // Retrieve email and password from request parameters
     String email = request.getParameter("email");
     String password = request.getParameter("password");
 
     // Validate user credentials using the UserManager class
-    String role = UserManager.validateUser(email, password);
+    Map<String, String> userDetails = UserManager.validateUser(email, password);
 
-    if (role != null) {
-        // If user is valid, set session attributes for the user and role
+    if (userDetails != null) {
+        // If user is valid, set session attributes for the user, role, and userId
         session.setAttribute("user", email);
-        session.setAttribute("role", role);
+        session.setAttribute("role", userDetails.get("role"));
+
+        // Convert userId to Integer and store it in the session
+        int userId = Integer.parseInt(userDetails.get("userId"));
+        session.setAttribute("userId", userId);
 
         // Redirect the user based on their role
+        String role = userDetails.get("role");
         if (role.equals("user")) {
             response.sendRedirect("index.jsp");
         } else if (role.equals("admin")) {

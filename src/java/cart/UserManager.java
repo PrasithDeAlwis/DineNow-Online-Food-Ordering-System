@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import classes.DbConnector;
 
 public class UserManager {
@@ -31,8 +33,9 @@ public class UserManager {
     }
 
     // Method to validate user credentials
-    public static String validateUser(String email, String password) {
-        String sql = "SELECT role FROM users WHERE email = ? AND password = ?";
+    public static Map<String, String> validateUser(String email, String password) {
+        String sql = "SELECT id, role FROM users WHERE email = ? AND password = ?";
+        Map<String, String> userDetails = new HashMap<>();
 
         try (Connection conn = DbConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -42,7 +45,9 @@ public class UserManager {
             
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("role"); // Return the user's role if credentials are valid
+                userDetails.put("role", rs.getString("role")); // User's role
+                userDetails.put("userId", rs.getString("id")); // User's ID
+                return userDetails; // Return user details if credentials are valid
             }
             return null; // Return null if no user matches the provided credentials
             

@@ -1,16 +1,68 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
+
+<%@ page import="order.Order" %>
+<%@ page import="order.OrderItem" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.sql.SQLException" %>
+
+<%    
     // Check if the user is logged in
     String user = (String) session.getAttribute("user");
+    Integer userId = (Integer) session.getAttribute("userId");
 
-    // If the user is not logged in, set a flag to show an error message
-    boolean isLoggedIn = (user != null);
-%>
-<%
-    String totalPrice = "0";
-    if (request.getMethod().equals("POST")) {
-        totalPrice = request.getParameter("totalPrice");
+    double totalAmount = 0.0;
+    boolean validCart = true;
+    ArrayList<HashMap<String, String>> cart = null;
+
+    if (user != null && userId != null) {
+        cart = (ArrayList<HashMap<String, String>>) session.getAttribute("cart");
+        if (cart != null) {
+            for (HashMap<String, String> item : cart) {
+                try {
+                    double price = Double.parseDouble(item.get("price"));
+                    int quantity = Integer.parseInt(item.get("quantity"));
+                    totalAmount += price * quantity;
+                } catch (NumberFormatException e) {
+                    validCart = false;
+                }
+            }
+        }
     }
+
+    // Process the checkout form
+    if (request.getMethod().equals("POST")) {
+        if (user == null || userId == null) {
+            request.setAttribute("error", "Please login to complete your order");
+        } else if (cart == null || cart.isEmpty()) {
+            request.setAttribute("error", "Your cart is empty");
+        } else if (!validCart) {
+            request.setAttribute("error", "Invalid items in cart. Please check your cart.");
+        } else {
+            String address = request.getParameter("address");
+            String mobileNumber = request.getParameter("mobileNumber");
+            int agentId = 1;
+
+            if (address == null || address.trim().isEmpty() || 
+                mobileNumber == null || mobileNumber.trim().isEmpty()) {
+                request.setAttribute("error", "Please fill all required fields");
+            } else {
+                try {
+                    int orderId = Order.createOrder(userId, totalAmount, address, mobileNumber, agentId);
+                    for (HashMap<String, String> item : cart) {
+                        int foodId = Integer.parseInt(item.get("foodId"));
+                        int quantity = Integer.parseInt(item.get("quantity"));
+                        double price = Double.parseDouble(item.get("price"));
+                        OrderItem.addOrderItem(orderId, foodId, quantity, price);
+                    }
+                    session.removeAttribute("cart");
+                    request.setAttribute("success", "Order placed successfully! Your order ID is: " + orderId);
+                } catch (SQLException | NumberFormatException e) {
+                    request.setAttribute("error", "An error occurred while processing your order. Please try again.");
+                }
+            }
+        }
+    }                   
 %>
 
 <!DOCTYPE html>
@@ -94,18 +146,25 @@
                 </div>
 
                 <!-- Checkout Form -->
-                <!-- Checkout Form -->
                 <div class="bg-white rounded-3xl shadow-lg p-6 z-20">
                     <h3 class="text-3xl font-semibold mb-6">Checkout</h3>
 
-                    <% if (!isLoggedIn) { %>
-                        <!-- Error Message -->
+                    <% if (request.getAttribute("error") != null) { %>
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-6">
-                            <p>You must be logged in to proceed with the checkout.</p>
+                            <%= request.getAttribute("error") %>
                         </div>
                     <% } %>
+                    
+                    <% if (request.getAttribute("success") != null) { %>
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <%= request.getAttribute("success") %>
+                        </div>
+                    <% } %>                   
 
-                    <form action="#" method="POST" class="space-y-6">
+                    <form action="Checkout.jsp" method="POST" class="space-y-6">
                         <!-- Order Confirmation -->
                         <div class="space-y-2">
                             <div class="flex items-center gap-2">
@@ -116,10 +175,9 @@
                             </div>
                             <div class="pl-8 pr-6">
                                 <input type="text" 
-                                       value="Rs : <%= totalPrice %>" 
+                                       value="Rs : <%= String.format("%.2f", totalAmount) %>" 
                                        readonly 
                                        class="w-full border-b-2 font-semibold border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
-                                       <%= !isLoggedIn ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
@@ -134,9 +192,11 @@
                             </div>
                             <div class="pl-8 pr-6">
                                 <input type="text" 
+                                       name="address"
+                                       required
                                        class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
                                        placeholder="Enter Delivery Address"
-                                       <%= !isLoggedIn ? "disabled" : "" %>
+                                       <%= user == null ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
@@ -150,10 +210,12 @@
                                 <label class="">Phone Number</label>
                             </div>
                             <div class="pl-8 pr-6">
-                                <input type="tel" 
+                                <input type="tel"
+                                       name="mobileNumber"
+                                       required
                                        class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
                                        placeholder="Enter Phone Number"
-                                       <%= !isLoggedIn ? "disabled" : "" %>
+                                       <%= user == null ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
@@ -173,7 +235,6 @@
                                            value="cash" 
                                            checked 
                                            class="w-4 h-4 appearance-none border-2 border-yellow-400 rounded-full checked:bg-yellow-400 checked:border-yellow-400 focus:outline-none"
-                                           <%= !isLoggedIn ? "disabled" : "" %>
                                     />
                                     <span>Cash on Delivery</span>
                                 </label>
@@ -182,7 +243,6 @@
                                            name="payment" 
                                            value="card" 
                                            class="w-4 h-4 appearance-none border-2 border-yellow-400 rounded-full checked:bg-yellow-400 checked:border-yellow-400 focus:outline-none"
-                                           <%= !isLoggedIn ? "disabled" : "" %>
                                     />
                                     <span>Card Payment</span>
                                 </label>
@@ -193,7 +253,8 @@
                         <div class="flex justify-center">
                             <button type="submit" 
                                     class="bg-yellow-400 text-gray-900 py-3 px-8 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300"
-                                    <%= !isLoggedIn ? "disabled" : "" %>>
+                                    <%= user == null ? "disabled" : "" %>
+                                    >
                                 GIVE ME MY FOODS
                             </button>
                         </div>

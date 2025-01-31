@@ -1,6 +1,10 @@
 package order;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import classes.DbConnector;
@@ -8,24 +12,24 @@ import classes.DbConnector;
 public class Order {
     private int orderId;
     private int userId;
-    private String status;
+    private String status; // "Delivered" or "Not Delivered"
     private double totalAmount;
-    private Date orderDate;
+    private LocalDateTime orderDate;
+    private String address;
+    private String mobileNumber;
+    private int agentId;
 
-    // Constructors
-    public Order(int userId, String status, double totalAmount, Date orderDate) {
-        this.userId = userId;
-        this.status = status;
-        this.totalAmount = totalAmount;
-        this.orderDate = orderDate;
-    }
-
-    public Order(int orderId, int userId, String status, double totalAmount, Date orderDate) {
+    // Constructor
+    public Order(int orderId, int userId, String status, double totalAmount, LocalDateTime orderDate,
+                 String address, String mobileNumber, int agentId) {
         this.orderId = orderId;
         this.userId = userId;
         this.status = status;
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
+        this.address = address;
+        this.mobileNumber = mobileNumber;
+        this.agentId = agentId;
     }
 
     // Getters and Setters
@@ -61,56 +65,169 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
-    public Date getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
-    // Methods to interact with the database
-    public static List<Order> getOrdersByUserId(int userId) throws SQLException {
-        List<Order> orders = new ArrayList<>();
-        String query = "SELECT * FROM orders WHERE user_id = ?";
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public int getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(int agentId) {
+        this.agentId = agentId;
+    }
+
+    // Method to create an order in the database
+    public static int createOrder(int userId, double totalAmount, String address,
+                                  String mobileNumber, int agentId) throws SQLException {
+        String sql = "INSERT INTO orders (user_id, status, total_amount, order_date, address, mobile_number, agent_id) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DbConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int orderId = resultSet.getInt("order_id");
-                String status = resultSet.getString("status");
-                double totalAmount = resultSet.getDouble("total_amount");
-                Date orderDate = resultSet.getDate("order_date");
-                orders.add(new Order(orderId, userId, status, totalAmount, orderDate));
+             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, userId);
+            statement.setString(2, "Not Delivered"); // Default status
+            statement.setDouble(3, totalAmount);
+            statement.setObject(4, LocalDateTime.now()); // Current date and time
+            statement.setString(5, address);
+            statement.setString(6, mobileNumber);
+            statement.setInt(7, agentId);
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating order failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return the generated order ID
+                } else {
+                    throw new SQLException("Creating order failed, no ID obtained.");
+                }
+            }
+        }
+    }
+
+    // Method to get all orders for a specific user
+    public static List<Order> getOrdersByUser(int userId) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE user_id = ?";
+        try (Connection connection = DbConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Order order = new Order(
+                            resultSet.getInt("order_id"),
+                            resultSet.getInt("user_id"),
+                            resultSet.getString("status"),
+                            resultSet.getDouble("total_amount"),
+                            resultSet.getObject("order_date", LocalDateTime.class),
+                            resultSet.getString("address"),
+                            resultSet.getString("mobile_number"),
+                            resultSet.getInt("agent_id")
+                    );
+                    orders.add(order);
+                }
             }
         }
         return orders;
     }
 
-    public static boolean createOrder(Order order, List<OrderItem> items) throws SQLException {
-        String insertOrderQuery = "INSERT INTO orders (user_id, status, total_amount, order_date) VALUES (?, ?, ?, ?)";
+    // Method to get all orders for a specific agent
+    public static List<Order> getOrdersByAgent(int agentId) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE agent_id = ?";
         try (Connection connection = DbConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setInt(1, order.getUserId());
-            preparedStatement.setString(2, order.getStatus());
-            preparedStatement.setDouble(3, order.getTotalAmount());
-            preparedStatement.setDate(4, order.getOrderDate());
-            int rowsAffected = preparedStatement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int orderId = generatedKeys.getInt(1);
-                    // Insert items
-                    for (OrderItem item : items) {
-                        item.setOrderId(orderId);
-                        OrderItem.createOrderItem(item);
-                    }
-                    return true;
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, agentId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Order order = new Order(
+                            resultSet.getInt("order_id"),
+                            resultSet.getInt("user_id"),
+                            resultSet.getString("status"),
+                            resultSet.getDouble("total_amount"),
+                            resultSet.getObject("order_date", LocalDateTime.class),
+                            resultSet.getString("address"),
+                            resultSet.getString("mobile_number"),
+                            resultSet.getInt("agent_id")
+                    );
+                    orders.add(order);
                 }
             }
         }
-        return false;
+        return orders;
+    }
+
+    // Method to get all orders (for admin)
+    public static List<Order> getAllOrders() throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders";
+        try (Connection connection = DbConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Order order = new Order(
+                            resultSet.getInt("order_id"),
+                            resultSet.getInt("user_id"),
+                            resultSet.getString("status"),
+                            resultSet.getDouble("total_amount"),
+                            resultSet.getObject("order_date", LocalDateTime.class),
+                            resultSet.getString("address"),
+                            resultSet.getString("mobile_number"),
+                            resultSet.getInt("agent_id")
+                    );
+                    orders.add(order);
+                }
+            }
+        }
+        return orders;
+    }
+
+    // Method to update the status of an order (for agent)
+    public static boolean updateOrderStatus(int orderId, String status) throws SQLException {
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+        try (Connection connection = DbConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, status);
+            statement.setInt(2, orderId);
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0; // Return true if the status was updated
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", userId=" + userId +
+                ", status='" + status + '\'' +
+                ", totalAmount=" + totalAmount +
+                ", orderDate=" + orderDate +
+                ", address='" + address + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", agentId=" + agentId +
+                '}';
     }
 }

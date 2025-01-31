@@ -22,27 +22,30 @@ public class CartManager {
     }
 
     // Add item to cart
-    public static void addItem(HttpSession session, String name, String price, String image) {
-        ArrayList<HashMap<String, String>> cart = getCart(session);
-        
-        // Check if item already exists in cart
-        for (HashMap<String, String> item : cart) {
-            if (item.get("name").equals(name)) {
-                // If exists, increment quantity
-                int quantity = Integer.parseInt(item.get("quantity"));
-                item.put("quantity", String.valueOf(quantity + 1));
-                return;
-            }
+    public static void addItem(HttpSession session, String name, String price, String image, String foodId) {
+    ArrayList<HashMap<String, String>> cart = getCart(session);
+    
+    // Check if item already exists in cart
+    for (HashMap<String, String> item : cart) {
+        String existingFoodId = item.get("foodId");
+        if (existingFoodId != null && existingFoodId.equals(foodId)) {
+            int quantity = Integer.parseInt(item.get("quantity"));
+            item.put("quantity", String.valueOf(quantity + 1));
+            session.setAttribute(CART_SESSION_KEY, cart);  // Make sure to update session
+            return;
         }
-        
-        // If item doesn't exist, add new item
-        HashMap<String, String> newItem = new HashMap<>();
-        newItem.put("name", name);
-        newItem.put("price", price);
-        newItem.put("image", image);
-        newItem.put("quantity", "1");
-        cart.add(newItem);
     }
+    
+    // Create new item
+    HashMap<String, String> newItem = new HashMap<>();
+    newItem.put("name", name);
+    newItem.put("price", price);
+    newItem.put("image", image);
+    newItem.put("foodId", foodId);  // Make sure foodId is being set
+    newItem.put("quantity", "1");
+    cart.add(newItem);
+    session.setAttribute(CART_SESSION_KEY, cart);  // Update session with new cart
+}
 
     // Remove item from cart
     public static void removeItem(HttpSession session, String name) {

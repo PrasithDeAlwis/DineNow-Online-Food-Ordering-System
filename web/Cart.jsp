@@ -139,7 +139,7 @@ if (request.getMethod().equals("POST")) {
                                                 <!-- Quantity Controls -->
                                                 <div class="flex items-center bg-gray-100 rounded-full px-0.5 sm:px-1 py-0.5 sm:py-1">
                                                     <form action="Cart.jsp" method="POST" class="flex items-center">
-                                                        <input type="hidden" name="itemName" value="<%= item.get("name") %>">
+                                                        <input type="hidden" name="foodId" value="<%= item.get("foodId") %>">
                                                         <input type="hidden" name="action" value="decrease">
                                                         <button type="submit" 
                                                             class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
@@ -152,7 +152,7 @@ if (request.getMethod().equals("POST")) {
                                                     <span class="w-8 sm:w-10 text-center text-sm sm:text-base font-medium"><%= item.get("quantity") %></span>
 
                                                     <form action="Cart.jsp" method="POST" class="flex items-center">
-                                                        <input type="hidden" name="itemName" value="<%= item.get("name") %>">
+                                                        <input type="hidden" name="foodId" value="<%= item.get("foodId") %>">
                                                         <input type="hidden" name="action" value="increase">
                                                         <button type="submit" 
                                                             class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
