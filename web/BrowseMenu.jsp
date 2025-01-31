@@ -2,6 +2,9 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="cart.CartManager"%>
+<%@page import="java.util.List"%>
+<%@page import="food.Food"%>
+<%@page import="food.Category"%>
 
 <%
 if (request.getMethod().equals("POST")) {
@@ -13,6 +16,26 @@ if (request.getMethod().equals("POST")) {
         // Redirect to prevent form resubmission
         response.sendRedirect("BrowseMenu.jsp?category=" + request.getParameter("category"));
         return;
+    }
+}
+
+// Get all categories from the database
+List<Category> categories = Category.getAllCategories();
+// Get active category from URL parameter or default to first category
+String activeCategory = request.getParameter("category");
+if (activeCategory == null && !categories.isEmpty()) {
+    activeCategory = categories.get(0).getName().toLowerCase().replace(" ", "");
+}
+
+// Get all foods from the database
+List<Food> allFoods = Food.getAllFoods();
+// Filter foods by active category
+List<Food> categoryFoods = new ArrayList<>();
+for (Food food : allFoods) {
+    Category foodCategory = Category.getCategoryById(food.getCategoryId());
+    if (foodCategory != null && 
+        foodCategory.getName().toLowerCase().replace(" ", "").equals(activeCategory)) {
+        categoryFoods.add(food);
     }
 }
 %>
@@ -116,13 +139,8 @@ if (request.getMethod().equals("POST")) {
                 <div class="bg-gray-100 border border-black rounded-tl-3xl rounded-tr-lg rounded-br-lg rounded-bl-lg p-4 sm:p-6">
                     <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Our Menu</h1>
                     <div class="flex flex-wrap lg:flex-col gap-2 sm:gap-4">
-                        <% 
-                            String[] categories = {"Burgers", "Fries", "Snacks", "Salads", "Cold drinks", 
-                                                    "Pizzas", "Desserts", "Hot drinks", "Sauces"}; 
-                            String activeCategory = request.getParameter("category") == null ? "burgers" : request.getParameter("category");
-                        %>
-                        <% for(String category : categories) { 
-                            String categoryKey = category.toLowerCase().replace(" ", "");
+                        <% for(Category category : categories) { 
+                            String categoryKey = category.getName().toLowerCase().replace(" ", "");
                         %>
                         <a href="BrowseMenu.jsp?category=<%= categoryKey %>" 
                             class="text-sm sm:text-base inline-block px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-semibold
@@ -131,83 +149,34 @@ if (request.getMethod().equals("POST")) {
                             <% } else { %> 
                                 hover:bg-white text-gray-800 
                             <% } %>">
-                            <%= category %>
+                            <%= category.getName() %>
                         </a>
                         <% } %>
                     </div>
                 </div>
             </div>
+            
             <!-- Menu Items Grid -->
             <div class="w-full lg:w-3/4">
                 <div class="grid custom-grid grid-cols-2 md:grid-cols-2 sm:grid-cols-2 gap-4 sm:gap-6">
-                    <%
-                        Map<String, String[][]> menuItemsMap = new HashMap<>();
-                        menuItemsMap.put("burgers", new String[][]{
-                            {"Classic Beef Burger with Cheese", "900", "resources/images/Burger1.png", "Juicy beef, cheddar, lettuce, tomatoes, and special sauce in a sesame bun"},
-                            {"Grilled Chicken Burger", "1200", "resources/images/Burger2.png", "Grilled chicken, lettuce, tomato, and garlic mayo in a golden bun"},
-                            {"Spicy Veggie Burger", "850", "resources/images/Burger3.png", "Crispy veggie patty, lettuce, tomatoes, and zesty sauce a vegetarian delight"},
-                            {"ouble Patty Cheese Burger", "1350", "resources/images/Burger4.png", "Double beef, cheddar, onions, and BBQ sauce in a toasted bun"},
-                            {"Cheese Burger", "1100", "resources/images/Burger5.png", "A cheeseburger is a hamburger with melted cheese and toppings"}
-                        });
-                        menuItemsMap.put("fries", new String[][]{
-                            {"Classic French Fries", "500", "resources/images/Fries1.png", "Enjoy the golden crunch of our perfectly salted fries"},
-                            {"Cheese Loaded Fries", "700", "resources/images/Fries2.jpg", "Indulge in hot, crispy fries topped with melted cheddar and aromatic herbs"},
-                            {"Spicy Curly Fries", "600", "resources/images/Fries3.jpg", "Spice up your snack with seasoned curly fries and tangy dipping sauce"}
-                        });
-                        menuItemsMap.put("snacks", new String[][]{
-                            {"Chicken Nuggets", "650", "resources/images/Snacks1.jpg", "Crispy chicken nuggets with BBQ or honey mustard sauce"},
-                            {"Mozzarella Sticks", "700", "resources/images/Snacks2.jpg", "Gooey mozzarella sticks with a crunchy crust, served with marinara sauce"},
-                            {"Onion Rings", "500", "resources/images/Snacks3.jpg", "Crispy, spiced onion rings fried to golden perfection"}
-                        });
-                        menuItemsMap.put("salads", new String[][]{
-                            {"Caesar Salad", "800", "resources/images/Salad1.png", "A classic Caesar salad with creamy dressing."},
-                            {"Greek Salad", "850", "resources/images/Salad2.png", "A fresh Greek salad with olives, feta, and tomatoes."},
-                            {"Grilled Chicken Salad", "900", "resources/images/Salad3.jpg", "Caesar salad with grilled chicken and crunchy croutons."}
-                        });
-                        menuItemsMap.put("colddrinks", new String[][]{
-                            {"Iced Lemon Tea", "400", "resources/images/Drinks1.png", "Refreshing iced tea with a splash of lemon, balancing sweetness and tang"},
-                            {"Chilled Mango Juice", "300", "resources/images/Drinks2.png", "Enjoy the sweet, creamy mango juice, served ice-cold for a refreshing treat"}
-                        });
-                        menuItemsMap.put("pizzas", new String[][]{
-                            {"Neapolitan Pizza", "2000", "resources/images/Pizza1.png", "Neapolitan pizza has a thin crust with fresh toppings, cooked in a wood-fired oven"},
-                            {"Pizza Margherita", "1500", "resources/images/Pizza2.png", "Pizza Margherita combines pasta, tomato sauce, mozzarella, and basil, topped with olive oil"}
-                        }); 
-                        menuItemsMap.put("desserts", new String[][]{
-                            {"Chocolate Brownie", "400", "resources/images/Desserts1.png", "A warm, gooey chocolate brownie that melts in your mouth"},
-                            {"Apple Pie", "900", "resources/images/Desserts2.png", "A warm, flaky crust filled with sweet, spiced cinnamon apples"},
-                            {"Strawberry Cheesecake", "900", "resources/images/Desserts3.jpg", "Creamy cheesecake with a buttery crust, topped with tangy strawberry compote"}
-                        });
-                        menuItemsMap.put("hotdrinks", new String[][]{
-                            {"Espresso", "200", "resources/images/HotDrink1.png", "A rich, aromatic shot of espresso brewed to perfection for an energy boost"},
-                            {"Cappuccino", "350", "resources/images/HotDrink2.png", "Steamed milk over espresso, topped with a dusting of cocoa powder"},
-                            {"Green Tea", "200", "resources/images/HotDrink3.png", "A soothing green tea with a hint of honey for natural sweetness"}
-                        });
-                        menuItemsMap.put("sauces", new String[][]{
-                            {"Garlic Mayo", "200", "resources/images/Sauces1.png", "Creamy garlic mayo that adds a flavorful burst to your meal"},
-                            {"Spicy Salsa", "200", "resources/images/Sauces2.png", "Zesty tomato salsa with a touch of heat for spice lovers"},
-                            {"Honey Mustard", "150", "resources/images/Sauces3.png", "A sweet honey and tangy mustard blend, perfect for dipping or drizzling"}
-                        });
-
-                        String[][] selectedCategoryItems = menuItemsMap.get(activeCategory);
-
-                        if (selectedCategoryItems != null) {
-                            for (String[] item : selectedCategoryItems) {
-                    %>
+                    <% if (!categoryFoods.isEmpty()) {
+                        for (Food food : categoryFoods) { %>
                     <div class="bg-white p-4 sm:p-6 shadow-[0px_8px_20px_rgba(0,0,0,0.15)] rounded-lg">
                         <div class="flex flex-col sm:flex-row justify-between">
                             <div class="flex-1 mb-4 sm:mb-0">
-                                <h3 class="text-lg sm:text-xl font-semibold mb-2"><%= item[0] %></h3>
-                                <p class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4"><%= item[3] %></p>
-                                <p class="text-base sm:text-lg font-semibold">Rs : <%= item[1] %></p>
+                                <h3 class="text-lg sm:text-xl font-semibold mb-2"><%= food.getName() %></h3>
+                                <p class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4"><%= food.getDescription() %></p>
+                                <p class="text-base sm:text-lg font-semibold">Rs : <%= String.format("%.2f", food.getPrice()) %></p>
                             </div>
                             <div class="relative ml-0 sm:ml-4 flex-shrink-0">
-                                <img src="<%= item[2] %>" alt="Menu Item" class="w-full h-32 sm:h-32 md:h-32 object-cover sm:w-28 md:w-32"/>
+                                <img src="<%= food.getImageUrl() %>" alt="Menu Item" class="w-full h-32 sm:h-32 md:h-32 object-cover sm:w-28 md:w-32"/>
+                                <% if (food.isAvailability()) { %>
                                 <div class="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-white bg-opacity-90 rounded-tl-[2rem] rounded-tr-none rounded-bl-none rounded-br-lg p-4 sm:p-6">
                                     <form action="BrowseMenu.jsp" method="POST" class="inline">
-                                        <input type="hidden" name="itemName" value="<%= item[0] %>">
-                                        <input type="hidden" name="itemPrice" value="<%= item[1] %>">
-                                        <input type="hidden" name="itemImage" value="<%= item[2] %>">
-                                        <input type="hidden" name="category" value="<%= activeCategory %>"> <!-- New hidden input -->
+                                        <input type="hidden" name="itemName" value="<%= food.getName() %>">
+                                        <input type="hidden" name="itemPrice" value="<%= String.format("%.2f", food.getPrice()) %>">
+                                        <input type="hidden" name="itemImage" value="<%= food.getImageUrl() %>">
+                                        <input type="hidden" name="category" value="<%= activeCategory %>">
                                         <button type="submit" class="bg-[#0F172A] hover:bg-[#1E293B] rounded-full p-1.5 sm:p-2 shadow-lg">
                                             <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="white" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16M4 12h16" />
@@ -215,15 +184,18 @@ if (request.getMethod().equals("POST")) {
                                         </button>
                                     </form>
                                 </div>
+                                <% } else { %>
+                                <div class="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-red-100 bg-opacity-90 rounded-tl-[2rem] rounded-tr-none rounded-bl-none rounded-br-lg p-4 sm:p-6">
+                                    <span class="text-red-600 font-semibold">Not Available</span>
+                                </div>
+                                <% } %>
                             </div>
                         </div>
                     </div>
-                    <% 
-                            }
-                        } else {
-                            out.print("<p>No items available for this category.</p>");
-                        }
-                    %>
+                    <% } 
+                    } else { %>
+                        <p class="col-span-2 text-center text-gray-600">No items available for this category.</p>
+                    <% } %>
                 </div>
             </div>
         </div>

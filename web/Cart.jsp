@@ -123,10 +123,10 @@ if (request.getMethod().equals("POST")) {
                             <div class="space-y-4 sm:space-y-6">
                                 <%
                                     ArrayList<HashMap<String, String>> cart = (ArrayList<HashMap<String, String>>) session.getAttribute("cart");
-                                    int total = 0;
+                                    double total = 0;
                                     if(cart != null && !cart.isEmpty()) {
                                         for(HashMap<String, String> item : cart) {
-                                            int price = Integer.parseInt(item.get("price"));
+                                            double price = Double.parseDouble(item.get("price"));
                                             int quantity = Integer.parseInt(item.get("quantity"));
                                             total += price * quantity;
                                 %>
@@ -135,7 +135,7 @@ if (request.getMethod().equals("POST")) {
                                         <div>
                                             <h3 class="text-base sm:text-lg font-semibold mb-1"><%= item.get("name") %></h3>
                                             <div class="flex items-center gap-4 sm:gap-6">
-                                                <p class="text-sm sm:text-base text-gray-900 font-medium">Rs : <%= item.get("price") %></p>
+                                                <p class="text-sm sm:text-base text-gray-900 font-medium">Rs : <%= String.format("%.2f", price) %></p>
                                                 <!-- Quantity Controls -->
                                                 <div class="flex items-center bg-gray-100 rounded-full px-0.5 sm:px-1 py-0.5 sm:py-1">
                                                     <form action="Cart.jsp" method="POST" class="flex items-center">
@@ -188,26 +188,26 @@ if (request.getMethod().equals("POST")) {
                             <div class="flex flex-col gap-3 bg-white rounded-lg p-4 sm:p-6">
                                 <% if(cart != null && !cart.isEmpty()) { 
                                     for(HashMap<String, String> item : cart) {
-                                        int price = Integer.parseInt(item.get("price"));
+                                        double price = Double.parseDouble(item.get("price"));
                                         int quantity = Integer.parseInt(item.get("quantity"));
                                 %>
                                 <div class="flex justify-between items-center text-gray-600 text-xs sm:text-sm font-semibold">
                                     <span class="flex items-center gap-1">
-                                        <span>Rs <%= price %></span>
+                                        <span>Rs <%= String.format("%.2f", price) %></span>
                                         <span class="text-gray-400">×</span>
                                         <span><%= quantity %></span>
                                     </span>
-                                    <span><%= price * quantity %></span>
+                                    <span><%= String.format("%.2f", price * quantity) %></span>
                                 </div>
                                 <% } %>
                                 <div class="border-t border-gray-200 mt-2 pt-3">
                                     <div class="flex justify-between items-center font-semibold text-base sm:text-lg">
                                         <span>Total</span>
-                                        <span>Rs <%= total %></span>
+                                        <span>Rs <%= String.format("%.2f", total) %></span>
                                     </div>
                                 </div>
                                 <% } else { %>
-                                    <p class="text-center text-gray-500 text-sm sm:text-base">Rs 0</p>
+                                    <p class="text-center text-gray-500 text-sm sm:text-base">Rs 0.00</p>
                                 <% } %>
                                 <div class="mt-3 sm:mt-4 flex justify-center">
                                 <form action="Checkout.jsp" method="POST">

@@ -28,14 +28,14 @@ public class CartManager {
         // Check if item already exists in cart
         for (HashMap<String, String> item : cart) {
             if (item.get("name").equals(name)) {
-                // Increment quantity if item exists
-                int currentQuantity = Integer.parseInt(item.get("quantity"));
-                item.put("quantity", String.valueOf(currentQuantity + 1));
+                // If exists, increment quantity
+                int quantity = Integer.parseInt(item.get("quantity"));
+                item.put("quantity", String.valueOf(quantity + 1));
                 return;
             }
         }
         
-        // Add new item if it doesn't exist
+        // If item doesn't exist, add new item
         HashMap<String, String> newItem = new HashMap<>();
         newItem.put("name", name);
         newItem.put("price", price);
@@ -44,51 +44,54 @@ public class CartManager {
         cart.add(newItem);
     }
 
+    // Remove item from cart
+    public static void removeItem(HttpSession session, String name) {
+        ArrayList<HashMap<String, String>> cart = getCart(session);
+        cart.removeIf(item -> item.get("name").equals(name));
+    }
+
     // Update item quantity
-    public static void updateQuantity(HttpSession session, String itemName, String action) {
+    public static void updateQuantity(HttpSession session, String name, String action) {
         ArrayList<HashMap<String, String>> cart = getCart(session);
         
-        for (int i = 0; i < cart.size(); i++) {
-            HashMap<String, String> item = cart.get(i);
-            if (item.get("name").equals(itemName)) {
+        for (HashMap<String, String> item : cart) {
+            if (item.get("name").equals(name)) {
                 int currentQuantity = Integer.parseInt(item.get("quantity"));
+                int newQuantity = currentQuantity;
                 
                 if (action.equals("increase")) {
-                    item.put("quantity", String.valueOf(currentQuantity + 1));
+                    newQuantity = currentQuantity + 1;
                 } else if (action.equals("decrease")) {
-                    if (currentQuantity > 1) {
-                        item.put("quantity", String.valueOf(currentQuantity - 1));
-                    } else {
-                        cart.remove(i);
-                    }
+                    newQuantity = currentQuantity - 1;
                 }
-                break;
+                
+                if (newQuantity <= 0) {
+                    removeItem(session, name);
+                } else {
+                    item.put("quantity", String.valueOf(newQuantity));
+                }
+                return;
             }
         }
     }
 
     // Calculate total price
-    public static int calculateTotal(ArrayList<HashMap<String, String>> cart) {
-        if (cart == null) return 0;
+    public static double getTotal(HttpSession session) {
+        ArrayList<HashMap<String, String>> cart = getCart(session);
+        double total = 0.0;
         
-        int total = 0;
         for (HashMap<String, String> item : cart) {
-            int price = Integer.parseInt(item.get("price"));
+            double price = Double.parseDouble(item.get("price"));
             int quantity = Integer.parseInt(item.get("quantity"));
             total += price * quantity;
         }
+        
         return total;
     }
 
-    // Calculate total quantity
-    public static int calculateTotalQuantity(ArrayList<HashMap<String, String>> cart) {
-        if (cart == null) return 0;
-        
-        int totalQuantity = 0;
-        for (HashMap<String, String> item : cart) {
-            totalQuantity += Integer.parseInt(item.get("quantity"));
-        }
-        return totalQuantity;
+    // Get cart items
+    public static ArrayList<HashMap<String, String>> getItems(HttpSession session) {
+        return getCart(session);
     }
 
     // Clear cart
