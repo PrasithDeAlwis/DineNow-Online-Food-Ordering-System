@@ -137,7 +137,7 @@ for (Food food : allFoods) {
         <div class="flex flex-col lg:flex-row gap-4 sm:gap-8">
             <!-- Categories Sidebar -->
             <div class="w-full lg:w-1/4">
-                <div class="bg-gray-100 border border-black rounded-tl-3xl rounded-tr-lg rounded-br-lg rounded-bl-lg p-4 sm:p-6">
+                <div class="bg-gray-100 border border-gray-300 border-2 rounded-tl-3xl rounded-tr-lg rounded-br-lg rounded-bl-lg p-4 sm:p-6">
                     <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Our Menu</h1>
                     <div class="flex flex-wrap lg:flex-col gap-2 sm:gap-4">
                         <% for(Category category : categories) { 

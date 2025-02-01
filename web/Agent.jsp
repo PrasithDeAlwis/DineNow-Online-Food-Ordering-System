@@ -68,7 +68,7 @@
                 if (successMessage) {
                     successMessage.style.display = 'none';
                 }
-            }, 3000); // 3 seconds
+            }, 5000); // 3 seconds
         }
 
         // Call the function when the page loads
@@ -76,17 +76,16 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="font-poppins bg-white overflow-x-hidden">
+<body class="font-poppins bg-white overflow-hidden">
     <!-- Background Elements -->
     <div class="fixed top-[-20%] right-[-10%] w-[600px] h-[600px] bg-brand-yellow rounded-full z-0"></div>
-    <div class="fixed bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-yellow rounded-full z-0"></div>
+    <div class="fixed bottom-[-10%] left-[-6%] w-[500px] h-[500px] bg-brand-yellow rounded-full z-0"></div>
     
     <!-- Main Container -->
     <div class="relative min-h-screen w-full max-w-[1440px] mx-auto px-8 pb-6">
         <!-- Success Message -->
         <% if (showSuccessMessage) { %>
             <div id="success-message" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-50">
-                <span>✔</span>
                 <span>Order status updated successfully!</span>
             </div>
         <% } %>
@@ -99,22 +98,23 @@
         </div>
 
         <!-- Main Content Grid -->
-        <div class="grid grid-cols-2 gap-12">
+        <div class="grid grid-cols-12 gap-12">
+            <div class="col-span-1"></div>
             <!-- Left Column -->
-            <div class="pt-12">
+            <div class="pt-6 col-span-5">
                 <div class="space-y-2">
                     <h2 class="text-[42px] font-bold text-gray-900 leading-tight">Delivering Smiles,</h2>
                     <p class="text-[42px] font-bold text-brand-yellow leading-tight">One meal at a time!</p>
                 </div>
                 <div class="relative">
-                    <img src="resources/images/deliveryman.png" alt="Delivery Person" 
+                    <img src="resources/images/deliveryman_highQ.png" alt="Delivery Person" 
                          class="max-w-[480px] relative z-10">
                 </div>
             </div>
 
             <!-- Right Column - Order Details -->
-            <div class="pt-12">
-                <div class="bg-white rounded-[24px] shadow-lg p-8 max-w-[450px]">
+            <div class="pt-6 col-span-5">
+                <div class="bg-gray-100 rounded-[24px] shadow-lg p-8 max-w-[450px] max-h-[60vh] overflow-y-auto">
                     <h3 class="text-xl font-semibold mb-6">Order Details</h3>
                     
                     <% if (orders != null && !orders.isEmpty()) { %>
@@ -164,6 +164,7 @@
                     </a>
                 </div>
             </div>
+            <div class="col-span-1"></div>    
         </div>
     </div>
 </body>

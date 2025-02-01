@@ -1,3 +1,4 @@
+<%@page import="cart.UserManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page import="order.Order" %>
@@ -46,7 +47,7 @@
         if (request.getAttribute("error") == null) {
             String address = request.getParameter("address");
             String mobileNumber = request.getParameter("mobileNumber");
-            int agentId = 3;
+            int agentId = UserManager.getAgentId();
 
             if (address == null || address.trim().isEmpty() || 
                 mobileNumber == null || mobileNumber.trim().isEmpty()) {
@@ -61,6 +62,8 @@
                         OrderItem.addOrderItem(orderId, foodId, quantity, price);
                     }
                     session.removeAttribute("cart");
+                    totalAmount = 0.0;
+                    validCart = true;
                     request.setAttribute("success", "Order placed successfully! Your order ID is: " + orderId);
                 } catch (SQLException | NumberFormatException e) {
                     request.setAttribute("error", "An error occurred while processing your order. Please try again.");
