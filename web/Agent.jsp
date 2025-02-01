@@ -1,14 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="cart.UserManager" %>
+<%@ page import="order.Order" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLException" %>
 <%
-    // Check if the user is logged in and has the role "agent"
+    // Check if user is logged in as agent
     String user = (String) session.getAttribute("user");
+    Integer userId = (Integer) session.getAttribute("userId");
     String role = (String) session.getAttribute("role");
 
     if (user == null || !"agent".equals(role)) {
-        // Redirect to the login page if the user is not logged in or not an agent
-        response.sendRedirect("SignIn.jsp?error=2"); // Optional: Add an error code for unauthorized access
-        return; // Stop further execution of the page
+        response.sendRedirect("SignIn.jsp?error=2");
+        return;
+    }
+
+    // Handle status update
+    String statusParam = request.getParameter("status");
+    String orderIdParam = request.getParameter("orderId");
+    boolean showSuccessMessage = false;
+    if (statusParam != null && orderIdParam != null) {
+        try {
+            int orderId = Integer.parseInt(orderIdParam);
+            boolean success = Order.updateOrderStatus(orderId, statusParam);
+            if (success) {
+                showSuccessMessage = true;
+            }
+        } catch (NumberFormatException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Fetch "Not Delivered" orders for the agent
+    int agentId = userId;
+    List<Order> orders = null;
+    try {
+        orders = Order.getOrdersByAgentAndStatus(agentId, "In Progress");
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
 %>
 <!DOCTYPE html>
@@ -16,7 +43,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dine NOW</title>
+    <title>Dine NOW - Agent Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,6 +60,19 @@
                 }
             }
         }
+
+        // Function to hide the success message after 3 seconds
+        function hideSuccessMessage() {
+            setTimeout(() => {
+                const successMessage = document.getElementById('success-message');
+                if (successMessage) {
+                    successMessage.style.display = 'none';
+                }
+            }, 3000); // 3 seconds
+        }
+
+        // Call the function when the page loads
+        window.onload = hideSuccessMessage;
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -43,6 +83,14 @@
     
     <!-- Main Container -->
     <div class="relative min-h-screen w-full max-w-[1440px] mx-auto px-8 pb-6">
+        <!-- Success Message -->
+        <% if (showSuccessMessage) { %>
+            <div id="success-message" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-50">
+                <span>✔</span>
+                <span>Order status updated successfully!</span>
+            </div>
+        <% } %>
+
         <!-- Logo Section -->
         <div class="">
             <a href="index.jsp" class="flex-shrink-0">
@@ -69,37 +117,44 @@
                 <div class="bg-white rounded-[24px] shadow-lg p-8 max-w-[450px]">
                     <h3 class="text-xl font-semibold mb-6">Order Details</h3>
                     
-                    <!-- Details Box -->
-                    <div class="bg-white rounded-[16px] border border-gray-200 p-6 mb-6">
-                        <div class="space-y-4">
-                            <div class="flex justify-between text-gray-600">
-                                <span>Price Rs :</span>
-                                <span class="text-gray-800">2200</span>
+                    <% if (orders != null && !orders.isEmpty()) { %>
+                        <% for (Order order : orders) { %>
+                            <div class="bg-white rounded-[16px] border border-gray-200 p-6 mb-6">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>Price Rs :</span>
+                                        <span class="text-gray-800"><%= order.getTotalAmount() %></span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>Address :</span>
+                                        <span class="text-gray-800"><%= order.getAddress() %></span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>Payment Method:</span>
+                                        <span class="text-gray-800">Cash on Delivery</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>Phone No:</span>
+                                        <span class="text-gray-800"><%= order.getMobileNumber() %></span>
+                                    </div>
+                                </div>
+                                <!-- Action Buttons -->
+                                <form method="post" class="flex gap-4 mt-4">
+                                    <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                                    <button type="submit" name="status" value="Delivered" 
+                                        class="flex-1 bg-delivery-green hover:bg-green-500 text-white py-2.5 px-4 rounded-lg transition-all font-medium">
+                                        Delivered
+                                    </button>
+                                    <button type="submit" name="status" value="Not Delivered"
+                                        class="flex-1 bg-cancel-red hover:bg-red-500 text-white py-2.5 px-4 rounded-lg transition-all font-medium">
+                                        Not Delivered
+                                    </button>
+                                </form>
                             </div>
-                            <div class="flex justify-between text-gray-600">
-                                <span>Address :</span>
-                                <span class="text-gray-800">No 84,danthure,kandy</span>
-                            </div>
-                            <div class="flex justify-between text-gray-600">
-                                <span>Payment Method:</span>
-                                <span class="text-gray-800">Cash on Delivery</span>
-                            </div>
-                            <div class="flex justify-between text-gray-600">
-                                <span>Phone No:</span>
-                                <span class="text-gray-800">077-5525347</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex gap-4">
-                        <button class="flex-1 bg-delivery-green hover:bg-green-500 text-white py-2.5 px-4 rounded-lg transition-all font-medium">
-                            Delivered
-                        </button>
-                        <button class="flex-1 bg-cancel-red hover:bg-red-500 text-white py-2.5 px-4 rounded-lg transition-all font-medium">
-                            Not Delivered
-                        </button>
-                    </div>
+                        <% } %>
+                    <% } else { %>
+                        <p class="text-gray-600 text-center py-4">No orders assigned</p>
+                    <% } %>
                 </div>
 
                 <!-- Logout Button -->

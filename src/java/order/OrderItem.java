@@ -66,7 +66,7 @@ public class OrderItem {
     public static void addOrderItem(int orderId, int foodId, int quantity, double price) throws SQLException {
         String sql = "INSERT INTO order_items (order_id, food_id, quantity, price) VALUES (?, ?, ?, ?)";
         try (Connection connection = DbConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+            PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, orderId);
             statement.setInt(2, foodId);
             statement.setInt(3, quantity);

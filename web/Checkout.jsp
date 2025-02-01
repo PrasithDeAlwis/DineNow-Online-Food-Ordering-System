@@ -10,6 +10,7 @@
     // Check if the user is logged in
     String user = (String) session.getAttribute("user");
     Integer userId = (Integer) session.getAttribute("userId");
+    String role = (String) session.getAttribute("role");
 
     double totalAmount = 0.0;
     boolean validCart = true;
@@ -31,14 +32,18 @@
     }
 
     // Process the checkout form
+    if (user == null || userId == null || !"user".equals(role)) {
+        request.setAttribute("error", "Please login to complete your order");
+    } else if (cart == null || cart.isEmpty()) {
+        request.setAttribute("error", "Your cart is empty");
+    } else if (!validCart) {
+        request.setAttribute("error", "Invalid items in cart. Please check your cart.");
+    }
+
+    // Then process the form submission if it's a POST request
     if (request.getMethod().equals("POST")) {
-        if (user == null || userId == null) {
-            request.setAttribute("error", "Please login to complete your order");
-        } else if (cart == null || cart.isEmpty()) {
-            request.setAttribute("error", "Your cart is empty");
-        } else if (!validCart) {
-            request.setAttribute("error", "Invalid items in cart. Please check your cart.");
-        } else {
+        // Only proceed if there were no previous validation errors
+        if (request.getAttribute("error") == null) {
             String address = request.getParameter("address");
             String mobileNumber = request.getParameter("mobileNumber");
             int agentId = 3;
@@ -62,7 +67,7 @@
                 }
             }
         }
-    }                   
+    }                  
 %>
 
 <!DOCTYPE html>
@@ -92,7 +97,7 @@
 
                 <!-- Right side: Login and Signup Buttons -->
                 <div class="hidden lg:flex items-center space-x-4">
-                    <% if (session.getAttribute("user") != null) { %>
+                    <% if (user != null && "user".equals(role)) { %>
                         <a href="Logout.jsp" class="bg-yellow-400 text-white px-6 py-2 rounded-full hover:bg-yellow-500">
                             Logout
                         </a>
@@ -120,7 +125,7 @@
                 <a href="index.jsp" class="block text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Home</a>
                 <a href="BrowseMenu.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Browse Menu</a>
                 <a href="Cart.jsp" class="block text-gray-600 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-400">Cart</a>
-                <% if (session.getAttribute("user") != null) { %>
+                <% if (session.getAttribute("user") != null && "user".equals(session.getAttribute("role"))) { %>
                     <a href="Logout.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Logout</a>
                 <% } else { %>
                     <a href="SignIn.jsp" class="block text-white bg-yellow-400 px-3 py-2 rounded-md text-base font-medium hover:bg-yellow-500">Login</a>
@@ -196,7 +201,7 @@
                                        required
                                        class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
                                        placeholder="Enter Delivery Address"
-                                       <%= user == null ? "disabled" : "" %>
+                                       <%= user == null || !"user".equals(role) || cart == null ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
@@ -215,7 +220,7 @@
                                        required
                                        class="w-full border-b-2 border-gray-200 py-1 focus:outline-none focus:border-yellow-400"
                                        placeholder="Enter Phone Number"
-                                       <%= user == null ? "disabled" : "" %>
+                                       <%= user == null || !"user".equals(role) || cart == null ? "disabled" : "" %>
                                 />
                             </div>
                         </div>
@@ -253,7 +258,7 @@
                         <div class="flex justify-center">
                             <button type="submit" 
                                     class="bg-yellow-400 text-gray-900 py-3 px-8 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300"
-                                    <%= user == null ? "disabled" : "" %>
+                                    <%= user == null || !"user".equals(role) || cart == null ? "disabled" : "" %>
                                     >
                                 GIVE ME MY FOODS
                             </button>

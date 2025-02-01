@@ -105,7 +105,7 @@ public class Order {
         try (Connection connection = DbConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, userId);
-            statement.setString(2, "Not Delivered"); // Default status
+            statement.setString(2, "In Progress"); // Default status
             statement.setDouble(3, totalAmount);
             statement.setObject(4, LocalDateTime.now()); // Current date and time
             statement.setString(5, address);
@@ -153,13 +153,14 @@ public class Order {
         return orders;
     }
 
-    // Method to get all orders for a specific agent
-    public static List<Order> getOrdersByAgent(int agentId) throws SQLException {
+    // Method to get all orders for a specific agent with a specific status
+    public static List<Order> getOrdersByAgentAndStatus(int agentId, String status) throws SQLException {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE agent_id = ?";
+        String sql = "SELECT * FROM orders WHERE agent_id = ? AND status = ?";
         try (Connection connection = DbConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, agentId);
+            statement.setString(2, status);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Order order = new Order(
