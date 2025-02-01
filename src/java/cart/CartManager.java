@@ -54,22 +54,22 @@ public class CartManager {
     }
 
     // Update item quantity
-    public static void updateQuantity(HttpSession session, String name, String action) {
+    public static void updateQuantity(HttpSession session, String foodId, String action) {
         ArrayList<HashMap<String, String>> cart = getCart(session);
-        
+
         for (HashMap<String, String> item : cart) {
-            if (item.get("name").equals(name)) {
+            if (item.get("foodId").equals(foodId)) {
                 int currentQuantity = Integer.parseInt(item.get("quantity"));
                 int newQuantity = currentQuantity;
-                
+
                 if (action.equals("increase")) {
                     newQuantity = currentQuantity + 1;
                 } else if (action.equals("decrease")) {
                     newQuantity = currentQuantity - 1;
                 }
-                
+
                 if (newQuantity <= 0) {
-                    removeItem(session, name);
+                    cart.remove(item);
                 } else {
                     item.put("quantity", String.valueOf(newQuantity));
                 }

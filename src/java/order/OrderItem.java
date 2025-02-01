@@ -74,15 +74,4 @@ public class OrderItem {
             statement.executeUpdate();
         }
     }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-                "id=" + id +
-                ", orderId=" + orderId +
-                ", foodId=" + foodId +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                '}';
-    }
 }

@@ -216,18 +216,4 @@ public class Order {
             return affectedRows > 0; // Return true if the status was updated
         }
     }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId=" + orderId +
-                ", userId=" + userId +
-                ", status='" + status + '\'' +
-                ", totalAmount=" + totalAmount +
-                ", orderDate=" + orderDate +
-                ", address='" + address + '\'' +
-                ", mobileNumber='" + mobileNumber + '\'' +
-                ", agentId=" + agentId +
-                '}';
-    }
 }
