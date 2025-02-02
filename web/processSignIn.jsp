@@ -9,15 +9,16 @@
     Map<String, String> userDetails = UserManager.validateUser(email, password);
 
     if (userDetails != null) {
-        // If user is valid, set session attributes for the user, role, and userId
+        // Store user details in the session
         session.setAttribute("user", email);
         session.setAttribute("role", userDetails.get("role"));
+        session.setAttribute("userId", Integer.parseInt(userDetails.get("userId")));
+        
+        // Store first and last name in session as full name
+        String fullName = userDetails.get("firstName") + " " + userDetails.get("lastName");
+        session.setAttribute("userName", fullName);
 
-        // Convert userId to Integer and store it in the session
-        int userId = Integer.parseInt(userDetails.get("userId"));
-        session.setAttribute("userId", userId);
-
-        // Redirect the user based on their role
+        // Redirect user based on their role
         String role = userDetails.get("role");
         if (role.equals("user")) {
             response.sendRedirect("index.jsp");
