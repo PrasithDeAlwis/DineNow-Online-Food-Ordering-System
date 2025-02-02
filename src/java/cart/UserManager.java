@@ -36,7 +36,7 @@ public class UserManager {
 
     // Method to validate user credentials
     public static Map<String, String> validateUser(String email, String password) {
-        String sql = "SELECT id, role FROM users WHERE email = ? AND password = ?";
+        String sql = "SELECT id, role, first_name, last_name FROM users WHERE email = ? AND password = ?";
         Map<String, String> userDetails = new HashMap<>();
 
         try (Connection conn = DbConnector.getConnection();
@@ -51,6 +51,8 @@ public class UserManager {
             if (rs.next()) {
                 userDetails.put("role", rs.getString("role"));
                 userDetails.put("userId", rs.getString("id"));
+                userDetails.put("firstName", rs.getString("first_name"));
+                userDetails.put("lastName", rs.getString("last_name"));
                 return userDetails;
             }
             return null;
