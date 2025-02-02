@@ -1,5 +1,6 @@
 <%@page import="food.Food"%>
 <%@page import="cart.UserManager"%>
+<%@page import="cart.UserManager"%>
 <%@page import="order.OrderItem"%>
 <%@page import="java.util.List"%>
 <%@page import="order.Order"%>
