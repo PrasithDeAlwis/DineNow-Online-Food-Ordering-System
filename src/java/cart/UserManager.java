@@ -34,7 +34,7 @@ public class UserManager {
 
     // Method to validate user credentials
     public static Map<String, String> validateUser(String email, String password) {
-        String sql = "SELECT id, role FROM users WHERE email = ? AND password = ?";
+        String sql = "SELECT id, first_name, last_name, role FROM users WHERE email = ? AND password = ?";
         Map<String, String> userDetails = new HashMap<>();
 
         try (Connection conn = DbConnector.getConnection();
@@ -45,8 +45,10 @@ public class UserManager {
             
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                userDetails.put("role", rs.getString("role")); // User's role
-                userDetails.put("userId", rs.getString("id")); // User's ID
+                userDetails.put("userId", rs.getString("id"));  // Store user ID
+                userDetails.put("firstName", rs.getString("first_name"));  // Store first name
+                userDetails.put("lastName", rs.getString("last_name"));  // Store last name
+                userDetails.put("role", rs.getString("role"));  // Store user role
                 return userDetails; // Return user details if credentials are valid
             }
             return null; // Return null if no user matches the provided credentials
@@ -54,6 +56,19 @@ public class UserManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return null; // Return null if there is a database error
+        }
+    }
+    // Get Agent ID
+    public static int getAgentId() throws SQLException {
+        String sql = "SELECT id FROM users WHERE role = 'agent' LIMIT 1";
+
+        try (Connection conn = DbConnector.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+            throw new SQLException("No agent found in system");
         }
     }
 }
