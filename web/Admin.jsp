@@ -1,3 +1,9 @@
+<%@page import="food.Food"%>
+<%@page import="cart.UserManager"%>
+<%@page import="cart.UserManager"%>
+<%@page import="order.OrderItem"%>
+<%@page import="java.util.List"%>
+<%@page import="order.Order"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, classes.DbConnector" %>
 <%
@@ -22,6 +28,30 @@
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
+    
+    // Handle order details request
+    String orderIdParam = request.getParameter("orderId");
+    if (orderIdParam != null) {
+        try {
+            int orderId = Integer.parseInt(orderIdParam);
+            Order order = Order.getOrderById(orderId);
+            List<OrderItem> items = OrderItem.getOrderItems(orderId);
+            request.setAttribute("selectedOrder", order);
+            request.setAttribute("orderItems", items);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Failed to retrieve order details.");
+        }
+    }
+    
+    // Retrieve all orders from the database
+    List<Order> orders = null;
+    try {
+        orders = Order.getAllOrders();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        request.setAttribute("error", "Failed to retrieve orders. Please try again.");
+    }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +78,119 @@
 
         <!-- Main content -->
         <div class="px-8 relative pt-16">
+            
+            <!-- Order Details Modal -->
+            <div id="orderModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-0 border-0 w-11/12 md:w-4/5 lg:w-3/4 max-w-4xl shadow-lg rounded-xl bg-white">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                        <h3 class="text-2xl font-semibold text-gray-800">Order Details</h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500 transition-colors rounded-lg p-1 hover:bg-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <div class="p-6">
+                        <% if (request.getAttribute("selectedOrder") != null) { 
+                            Order selectedOrder = (Order) request.getAttribute("selectedOrder");
+                            List<OrderItem> orderItems = (List<OrderItem>) request.getAttribute("orderItems");
+                        %>
+                        <!-- Order Information -->
+                        <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">Order ID</span>
+                                    <span class="font-medium">#<%= selectedOrder.getOrderId() %></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">Order Date</span>
+                                    <span class="font-medium"><%= selectedOrder.getOrderDate() %></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">Customer</span>
+                                    <span class="font-medium"><%= UserManager.getUserName(selectedOrder.getUserId()) %></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">Status</span>
+                                    <span class="inline-flex items-center mt-1">
+                                        <% if ("Delivered".equals(selectedOrder.getStatus())) { %>
+                                            <span class="px-4 py-1 bg-green-400 text-white rounded-full text-sm font-medium">
+                                                Delivered
+                                            </span>
+                                        <% } else if ("Not Delivered".equals(selectedOrder.getStatus())) { %>
+                                            <span class="px-4 py-1 bg-red-400 text-white rounded-full text-sm font-medium">
+                                                Not Delivered
+                                            </span>
+                                        <% } else { %>
+                                            <span class="px-4 py-1 bg-blue-400 text-white rounded-full text-sm font-medium">
+                                                <%= selectedOrder.getStatus() %>
+                                            </span>
+                                        <% } %>
+                                    </span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">Address</span>
+                                    <span class="font-medium"><%= selectedOrder.getAddress() %></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">Mobile</span>
+                                    <span class="font-medium"><%= selectedOrder.getMobileNumber() %></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-900">Item</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-900">Quantity</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-900">Price</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-900">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-gray-50 divide-y divide-gray-200">
+                                    <% 
+                                    double total = 0;
+                                    for (OrderItem item : orderItems) {
+                                        Food food = Food.getFoodById(item.getFoodId());
+                                        String foodName = food != null ? food.getName() : "Unknown Food";
+                                        double subtotal = item.getPrice() * item.getQuantity();
+                                        total += subtotal;
+                                    %>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= foodName %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= item.getQuantity() %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RS. <%= String.format("%.2f", item.getPrice()) %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RS. <%= String.format("%.2f", subtotal) %></td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                                <tfoot class="bg-gray-100">
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-4 text-right font-medium text-gray-900">Total:</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">RS. <%= String.format("%.2f", total) %></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="flex justify-end space-x-3 p-6 border-t border-gray-200">
+                        <button onclick="closeModal()" 
+                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-lg transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="flex relative w-full h-screen bg-white pt-8">
                 <!-- Left section -->
                 <div class="w-1/3 pr-8 relative overflow-hidden z-10">
@@ -107,7 +250,7 @@
                                     Select
                                 </button>
                             </form>
-                            <a href="AddUser.jsp" class="bg-green-400 hover:bg-green-500 text-white px-6 py-2 rounded-lg transition-colors">
+                            <a href="addUser.jsp" class="bg-green-400 hover:bg-green-500 text-white px-6 py-2 rounded-lg transition-colors">
                                 Add User
                             </a>
                         </div>
@@ -172,32 +315,46 @@
                             <thead class="border-b">
                                 <tr class="text-left">
                                     <th>Agent Name</th>
+                                    <th>Phone Number</th>
                                     <th>Order ID</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="border-b">
-                                    <td class="py-3">Uditha Dissanayake</td>
-                                    <td>ORD_25</td>
-                                    <td>
-                                        <div class="flex gap-2">
-                                            <button class="bg-green-400 hover:bg-green-500 text-white px-4 py-1 rounded-full text-sm transition-colors">
+                            <% for(Order order : orders) { %>
+                            <tr class="border-b">
+                                <td class="py-3"><%= UserManager.getUserName(order.getAgentId()) %></td>
+                                <td><%= order.getMobileNumber() %></td>
+                                <td><%= order.getOrderId() %></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <% if ("Delivered".equals(order.getStatus())) { %>
+                                            <span class="bg-green-400 text-white px-4 py-1 rounded-full text-sm">
                                                 Delivered
-                                            </button>
-                                            <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-full text-sm transition-colors">
-                                                Not Delivered
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button class="bg-blue-400 hover:bg-blue-500 text-white px-4 py-1 rounded-full text-sm transition-colors">
+                                            </span>
+                                        <% } else if ("Not Delivered".equals(order.getStatus())) { %>
+                                            <span class="bg-red-400 text-white px-4 py-1 rounded-full text-sm">
+                                                <%= order.getStatus() %>
+                                            </span>
+                                        <% } else { %>
+                                            <span class="bg-blue-400 text-white px-4 py-1 rounded-full text-sm">
+                                                <%= order.getStatus() %>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                </td>
+                                <td>
+                                    <form action="Admin.jsp" method="get" style="display: inline;">
+                                        <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                                        <button type="submit" 
+                                                onclick="showModal()"
+                                                class="bg-blue-400 text-white px-4 py-1 rounded-full text-sm">
                                             View
                                         </button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
                         </table>
                     </div>
                 </div>
@@ -205,7 +362,6 @@
         </div>
     </div>
 
-    <!-- JavaScript for Delete and Edit -->
     <script>
         function deleteUser(userId) {
             if (confirm("Are you sure you want to delete this user?")) {
@@ -216,6 +372,26 @@
         function editUser(userId) {
             window.location.href = "editUser.jsp?userId=" + userId;
         }
+        
+        function showModal() {
+            document.getElementById('orderModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        <% if (request.getAttribute("selectedOrder") != null) { %>
+            showModal();
+        <% } %>
+
+        document.getElementById('orderModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>

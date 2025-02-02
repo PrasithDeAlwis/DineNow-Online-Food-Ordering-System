@@ -98,16 +98,14 @@ public class Order {
     }
 
     // Method to create an order in the database
-    public static int createOrder(int userId, double totalAmount, String address,
-                                  String mobileNumber, int agentId) throws SQLException {
-        String sql = "INSERT INTO orders (user_id, status, total_amount, order_date, address, mobile_number, agent_id) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static int createOrder(int userId, double totalAmount, String address,String mobileNumber, int agentId) throws SQLException {
+        String sql = "INSERT INTO orders (user_id, status, total_amount, order_date, address, mobile_number, agent_id) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DbConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, userId);
-            statement.setString(2, "In Progress"); // Default status
+            statement.setString(2, "In Progress");
             statement.setDouble(3, totalAmount);
-            statement.setObject(4, LocalDateTime.now()); // Current date and time
+            statement.setObject(4, LocalDateTime.now());
             statement.setString(5, address);
             statement.setString(6, mobileNumber);
             statement.setInt(7, agentId);
@@ -119,7 +117,7 @@ public class Order {
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1); // Return the generated order ID
+                    return generatedKeys.getInt(1);
                 } else {
                     throw new SQLException("Creating order failed, no ID obtained.");
                 }
@@ -203,6 +201,30 @@ public class Order {
             }
         }
         return orders;
+    }
+    
+    // Add this method to Order class
+    public static Order getOrderById(int orderId) throws SQLException {
+        String sql = "SELECT * FROM orders WHERE order_id = ?";
+        try (Connection connection = DbConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, orderId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new Order(
+                        resultSet.getInt("order_id"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("status"),
+                        resultSet.getDouble("total_amount"),
+                        resultSet.getObject("order_date", LocalDateTime.class),
+                        resultSet.getString("address"),
+                        resultSet.getString("mobile_number"),
+                        resultSet.getInt("agent_id")
+                    );
+                }
+            }
+        }
+        return null;
     }
 
     // Method to update the status of an order (for agent)

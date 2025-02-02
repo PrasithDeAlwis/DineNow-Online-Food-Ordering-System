@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import classes.DbConnector;
+import classes.MD5;
 
 public class UserManager {
 
@@ -17,14 +18,15 @@ public class UserManager {
         try (Connection conn = DbConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
+            String hashedPassword = MD5.getMd5(password);
+            
             pstmt.setString(1, firstName);
             pstmt.setString(2, lastName);
             pstmt.setString(3, email);
-            pstmt.setString(4, password); // In production, hash the password
+            pstmt.setString(4, hashedPassword);
             pstmt.setString(5, role);
             
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0; // Return true if user is successfully registered
+            return pstmt.executeUpdate() > 0;
             
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,30 +36,31 @@ public class UserManager {
 
     // Method to validate user credentials
     public static Map<String, String> validateUser(String email, String password) {
-        String sql = "SELECT id, first_name, last_name, role FROM users WHERE email = ? AND password = ?";
+        String sql = "SELECT id, role FROM users WHERE email = ? AND password = ?";
         Map<String, String> userDetails = new HashMap<>();
 
         try (Connection conn = DbConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
+            String hashedPassword = MD5.getMd5(password);
+            
             pstmt.setString(1, email);
-            pstmt.setString(2, password); // In production, verify against hashed password
+            pstmt.setString(2, hashedPassword);
             
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                userDetails.put("userId", rs.getString("id"));  // Store user ID
-                userDetails.put("firstName", rs.getString("first_name"));  // Store first name
-                userDetails.put("lastName", rs.getString("last_name"));  // Store last name
-                userDetails.put("role", rs.getString("role"));  // Store user role
-                return userDetails; // Return user details if credentials are valid
+                userDetails.put("role", rs.getString("role"));
+                userDetails.put("userId", rs.getString("id"));
+                return userDetails;
             }
-            return null; // Return null if no user matches the provided credentials
+            return null;
             
         } catch (SQLException e) {
             e.printStackTrace();
-            return null; // Return null if there is a database error
+            return null;
         }
     }
+    
     // Get Agent ID
     public static int getAgentId() throws SQLException {
         String sql = "SELECT id FROM users WHERE role = 'agent' LIMIT 1";
@@ -69,6 +72,28 @@ public class UserManager {
                 return rs.getInt("id");
             }
             throw new SQLException("No agent found in system");
+        }
+    }
+    
+    public static String getUserName(int userId) {
+        String sql = "SELECT first_name, last_name FROM users WHERE id = ?";
+        
+        try (Connection conn = DbConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                return firstName + " " + lastName;
+            }
+            return "Unknown";
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error";
         }
     }
 }

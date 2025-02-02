@@ -83,9 +83,7 @@
                                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg">
                                 </div>
                             </div>
-                            <button class="bg-yellow-400 text-white px-8 py-2 rounded-lg hover:bg-yellow-500">
-                                Find Food
-                            </button>
+                            <a href="BrowseMenu.jsp" class="bg-yellow-400 text-white px-8 py-2 rounded-lg hover:bg-yellow-500">Find Food</a>
                         </div>
                     </div>
                 </div>
@@ -97,42 +95,42 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 class="text-2xl font-bold text-gray-900 mb-8">Popular Categories</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-            <div class="group cursor-pointer">
+            <a href="BrowseMenu.jsp?category=burgers" class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="resources/images/Burgers & Fast food.png" alt="Burgers" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Burgers & Fast food</p>
                 </div>
-            </div>
-            <div class="group cursor-pointer">
+            </a>
+            <a href="BrowseMenu.jsp?category=salads" class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="resources/images/Salads.png" alt="Salads" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Salads</p>
                 </div>
-            </div>
-            <div class="group cursor-pointer">
+            </a>
+            <a href="BrowseMenu.jsp?category=snacks" class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="resources/images/Pasta & Casuals.png" alt="Pasta" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Pasta</p>
                 </div>
-            </div>
-            <div class="group cursor-pointer">
+            </a>
+            <a href="BrowseMenu.jsp?category=pizzas" class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="resources/images/Pizza.png" alt="Pizza" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Pizza</p>
                 </div>
-            </div>
-            <div class="group cursor-pointer">
+            </a>
+            <a href="BrowseMenu.jsp?category=desserts" class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="resources/images/Breakfast.png" alt="Breakfast" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Breakfast</p>
                 </div>
-            </div>
-            <div class="group cursor-pointer">
+            </a>
+            <a href="BrowseMenu.jsp?category=hotdrinks" class="group cursor-pointer">
                 <div class="bg-white p-4 rounded-xl shadow-sm group-hover:shadow-md transition-all">
                     <img src="resources/images/Soups.png" alt="Soups" class="w-full h-32 object-cover rounded-lg">
                     <p class="mt-4 text-center font-medium">Soups</p>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
