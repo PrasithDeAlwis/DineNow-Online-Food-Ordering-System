@@ -38,13 +38,13 @@ Before running this project, ensure that you have the following installed:
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/dinenow.git
+    git clone https://github.com/PrasithDeAlwis/DineNow-Online-Food-Ordering-System.git
     ```
 
 2. **Configure the Database**:
     - Create a MySQL database:
         ```sql
-        CREATE DATABASE dinenow_db;
+        CREATE DATABASE dinenow;
         ```
     - Run the SQL scripts located in the `db_scripts` folder to set up the required tables.
 
@@ -53,7 +53,7 @@ Before running this project, ensure that you have the following installed:
         ```java
         public class DbConnector {
             public static Connection getConnection() throws SQLException {
-                return DriverManager.getConnection("jdbc:mysql://localhost:3306/dinenow_db", "username", "password");
+                return DriverManager.getConnection("jdbc:mysql://localhost:3306/dinenow", "username", "password");
             }
         }
         ```
